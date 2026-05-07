@@ -14,19 +14,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aarnav Noble — Software Engineer",
-  description: "Software engineer building intelligent systems. ML, full-stack, and everything in between.",
+  title: "Aarnav Noble | Computer Engineer",
+  description: "Computer engineer building intelligent systems. ML, infrastructure, and everything in between.",
   metadataBase: new URL("https://aarnavnoble.com"),
   openGraph: {
     title: "Aarnav Noble",
-    description: "Software engineer building intelligent systems. ML, full-stack, and everything in between.",
+    description: "Computer engineer building intelligent systems. ML, full-stack, and everything in between.",
     type: "website",
     siteName: "Aarnav Noble",
   },
   twitter: {
     card: "summary_large_image",
     title: "Aarnav Noble",
-    description: "Software engineer building intelligent systems.",
+    description: "Computer engineer building intelligent systems.",
   },
   icons: { icon: "/favicon.ico" },
 };

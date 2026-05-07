@@ -9,7 +9,7 @@ const PHRASES = [
   {
     label: "Hash yer dothrae chek?",
     steps: [
-      { label: "Scene audio",     value: "raw GoT scene — dialogue + score + SFX" },
+      { label: "Scene audio",     value: "raw GoT scene: dialogue + score + SFX" },
       { label: "After Demucs",    value: "isolated vocal stem" },
       { label: "Whisper output",  value: '"hash ya dot rat check"' },
       { label: "IPA",             value: "/hæʃ jɑː dɒt ɹæt tʃɛk/" },
@@ -20,7 +20,7 @@ const PHRASES = [
   {
     label: "M'athchomaroon",
     steps: [
-      { label: "Scene audio",     value: "raw GoT scene — ambient score" },
+      { label: "Scene audio",     value: "raw GoT scene: ambient score" },
       { label: "After Demucs",    value: "isolated vocal stem" },
       { label: "Whisper output",  value: '"math co ma roon"' },
       { label: "IPA",             value: "/mæθ koʊ mɑ ɹuːn/" },
@@ -31,7 +31,7 @@ const PHRASES = [
   {
     label: "Khal Drogo",
     steps: [
-      { label: "Scene audio",     value: "raw GoT scene — close-mic dialogue" },
+      { label: "Scene audio",     value: "raw GoT scene: close-mic dialogue" },
       { label: "After Demucs",    value: "isolated vocal stem" },
       { label: "Whisper output",  value: '"cal dro go"' },
       { label: "IPA",             value: "/kɑl dɹoʊ goʊ/" },

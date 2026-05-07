@@ -8,12 +8,12 @@ export const EXPERIENCE = [
   {
     company: "AethexAI",
     detail: "Stealth voice AI startup · London, UK",
-    role: "Member of Technical Staff — Intern",
+    role: "Member of Technical Staff, Intern",
     period: "Jan 2026 – Apr 2026",
     bullets: [
-      "Post-call LLM pipeline to correct ASR transcripts across every production call — parallelized per-turn, async from the live path, zero latency impact",
+      "Post-call LLM pipeline to correct ASR transcripts across every production call; parallelized per-turn, async from the live path, zero latency impact",
       "5-phase conversation state machine resolving interrupt-handling failures in a sub-500ms voice pipeline; fixed recording timeline drift across WebRTC, telephony, and WebSocket",
-      "Designed and shipped 100+ REST and WebSocket endpoints for the external developer API and Python SDK — session lifecycle, outbound calls, webhooks, browser auth",
+      "Designed and shipped 100+ REST and WebSocket endpoints for the external developer API and Python SDK: session lifecycle, outbound calls, webhooks, browser auth",
       "AWS/EKS: Kubernetes deployments, Terraform infra, OIDC secret management, 500+ pods in production; CI/CD endpoint-change notification workflows",
       "Hardened the RAG knowledge-base pipeline against concurrent loading races, cross-turn retrieval dedup, and S3 key collisions",
     ],
@@ -24,7 +24,7 @@ export const EXPERIENCE = [
     role: "AI/ML Developer",
     period: "May 2025 – Aug 2025",
     bullets: [
-      "Basin-wide GNN (PyTorch) for Lake Erie concentration forecasting integrating satellite and atmospheric data — 5× spatial coverage vs. traditional approaches",
+      "Basin-wide GNN (PyTorch) for Lake Erie concentration forecasting integrating satellite and atmospheric data; 5× spatial coverage vs. traditional approaches",
       "XGBoost pipeline with multi-source spatial feature engineering (weather, satellite, soil), 85% accuracy improvement",
     ],
   },
@@ -68,9 +68,9 @@ export const PROJECTS = [
   {
     slug: "roam",
     name: "Roam",
-    tagline: "AI travel planner built on dense retrieval, learning-to-rank, and route optimization — not an LLM wrapper.",
+    tagline: "AI travel planner built on dense retrieval, learning-to-rank, and route optimization. Not an LLM wrapper.",
     description:
-      "Give it a destination, trip length, transport mode, and interests — it returns a day-by-day itinerary with stops ordered to minimize travel time. Most AI travel apps are LLM wrappers. Roam builds the actual ML stack: dense retrieval, learning-to-rank, and combinatorial optimization, with the LLM used only for the final synthesis pass.",
+      "Give it a destination, trip length, transport mode, and interests; it returns a day-by-day itinerary with stops ordered to minimize travel time. Most AI travel apps are LLM wrappers. Roam builds the actual ML stack: dense retrieval, learning-to-rank, and combinatorial optimization, with the LLM used only for the final synthesis pass.",
     github: "https://github.com/AarnavNoble/roam",
     demo: "https://huggingface.co/spaces/AarnavNoble/roam",
     stack: ["Python", "FastAPI", "sentence-transformers", "FAISS", "LightGBM", "OR-Tools", "Groq", "React Native"],
@@ -101,11 +101,11 @@ export const PROJECTS = [
       {
         step: "LLM Synthesis",
         tech: "Groq · Llama 3.3 70B",
-        detail: "Receives the optimized route and retrieved travel context. Writes the natural-language itinerary. This is the only LLM step — everything above it is deterministic ML.",
+        detail: "Receives the optimized route and retrieved travel context. Writes the natural-language itinerary. This is the only LLM step; everything above it is deterministic ML.",
       },
     ],
     sampleOutput: {
-      label: "Sample output — Tokyo, 2 days, walking, food + history",
+      label: "Sample output: Tokyo, 2 days, walking, food + history",
       days: [
         {
           day: "Day 1",
@@ -131,9 +131,9 @@ export const PROJECTS = [
   {
     slug: "dothraki-asr",
     name: "Dothraki ASR",
-    tagline: "Zero-shot ASR for a constructed language with zero training data — phoneme matching against the Dothraki lexicon.",
+    tagline: "Zero-shot ASR for a constructed language with zero training data; phoneme matching against the Dothraki lexicon.",
     description:
-      "Dothraki was invented by linguist David J. Peterson for HBO's Game of Thrones. It has a documented phonology and a 4,000-word lexicon — but zero representation in any ASR training set. This project tests whether multilingual Whisper can produce useful output when run zero-shot on Dothraki audio, and whether that output can be mapped back to real Dothraki words via phoneme matching.",
+      "Dothraki was invented by linguist David J. Peterson for HBO's Game of Thrones. It has a documented phonology and a 4,000-word lexicon, but zero representation in any ASR training set. This project tests whether multilingual Whisper can produce useful output when run zero-shot on Dothraki audio, and whether that output can be mapped back to real Dothraki words via phoneme matching.",
     github: "https://github.com/AarnavNoble/dothraki-asr",
     demo: null,
     stack: ["Python", "mlx-whisper", "Demucs", "espeak-ng", "gruut", "Next.js", "wavesurfer.js"],
@@ -146,7 +146,7 @@ export const PROJECTS = [
       {
         step: "Zero-Shot ASR",
         tech: "mlx-whisper",
-        detail: "Whisper (Apple Silicon optimized) transcribes the isolated vocal. It has never seen Dothraki — the output is phonetically plausible English/gibberish that approximates what it hears.",
+        detail: "Whisper (Apple Silicon optimized) transcribes the isolated vocal. It has never seen Dothraki; the output is phonetically plausible English/gibberish that approximates what it hears.",
       },
       {
         step: "IPA Conversion",
@@ -165,7 +165,7 @@ export const PROJECTS = [
       },
     ],
     sampleOutput: {
-      label: "Sample trace — \"Hash yer dothrae chek?\"",
+      label: "Sample trace: \"Hash yer dothrae chek?\"",
       steps: [
         { label: "Scene audio", value: "raw GoT scene with music and SFX" },
         { label: "After Demucs", value: "isolated vocal stem" },

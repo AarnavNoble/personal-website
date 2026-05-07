@@ -340,14 +340,14 @@ export default function Home() {
           className="space-y-3"
         >
           <p className="text-[15px] leading-[1.75]" style={{ color: "var(--g11)" }}>
-            Second-year Computer Engineering student at Waterloo, on co-op. I build ML systems
-            and the infrastructure that runs them — most recently at{" "}
+            Third-year Computer Engineering student at Waterloo, on co-op. I build ML systems
+            and the infrastructure that runs them, most recently at{" "}
             <span style={{ color: "var(--g12)" }}>AethexAI</span> (stealth voice AI), and before
             that doing ML research at Environment and Climate Change Canada.
           </p>
           <p className="text-[15px] leading-[1.75]" style={{ color: "var(--g8)" }}>
             I'm drawn to hard problems in retrieval, speech, and distributed systems. Outside of
-            that — travelling, photography, film and TV, and following soccer, MMA, and tennis.
+            work: travelling, photography, film and TV, and following soccer, MMA, and tennis.
           </p>
         </div>
 
@@ -373,7 +373,7 @@ export default function Home() {
                     <p className="text-[13px] font-semibold" style={{ color: "var(--g12)" }}>{p.name}</p>
                   </div>
                   <p className="text-[11px] leading-relaxed mb-3" style={{ color: "var(--g8)" }}>
-                    {p.tagline.split(" — ")[0]}
+                    {p.tagline.split(". ")[0]}
                   </p>
                   <div className="grid grid-cols-2 gap-1">
                     {p.stack.slice(0, 3).map((t, j) => (

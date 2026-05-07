@@ -212,7 +212,7 @@ export function RoamDemo() {
             >
               <div className="flex items-center justify-between mb-3">
                 <p className="text-[11px] font-mono" style={{ color: "#22c55e" }}>
-                  ✓ Itinerary ready — {city}
+                  ✓ Itinerary ready: {city}
                 </p>
                 <span className="text-[10px] font-mono" style={{ color: "var(--g6)" }}>
                   {PIPELINE.reduce((s, p) => s + p.ms, 0)}ms total
