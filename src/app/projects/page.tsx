@@ -2,120 +2,47 @@
 
 import Link from "next/link";
 import { PROJECTS, LINKS } from "@/lib/data";
+import { RoamDemo } from "./RoamDemo";
+import { DothrakiDemo } from "./DothrakiDemo";
+
+const PROJECT_ACCENTS = ["#3b82f6", "#8b5cf6"];
+const PROJECT_DEMOS = [RoamDemo, DothrakiDemo];
 
 function Pipeline({ steps }: { steps: typeof PROJECTS[0]["pipeline"] }) {
   return (
-    <div className="my-7 rounded-lg overflow-hidden" style={{ border: "1px solid var(--g4)" }}>
+    <div className="my-5 rounded-lg overflow-hidden" style={{ border: "1px solid var(--g4)" }}>
       <div
-        className="px-4 py-2 flex items-center gap-2"
+        className="px-3 py-1.5 flex items-center"
         style={{ background: "var(--g2)", borderBottom: "1px solid var(--g4)" }}
       >
-        <span className="text-[11px] uppercase tracking-widest font-medium" style={{ color: "var(--g7)" }}>
+        <span className="text-[10px] uppercase tracking-widest font-medium" style={{ color: "var(--g6)" }}>
           Pipeline
         </span>
       </div>
-      <div>
-        {steps.map((s, i) => (
-          <div
-            key={s.step}
-            className="flex gap-4 px-4 py-3"
-            style={{ borderBottom: i < steps.length - 1 ? "1px solid var(--g3)" : "none" }}
+      {steps.map((s, i) => (
+        <div
+          key={s.step}
+          className="flex items-center gap-3 px-3 py-2"
+          style={{ borderBottom: i < steps.length - 1 ? "1px solid var(--g3)" : "none" }}
+        >
+          <span className="text-[10px] font-mono w-5 shrink-0 tabular-nums" style={{ color: "var(--g5)" }}>
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span className="text-[12px] font-medium w-36 shrink-0" style={{ color: "var(--g10)" }}>
+            {s.step}
+          </span>
+          <span
+            className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+            style={{ color: "var(--g7)", background: "var(--g3)", border: "1px solid var(--g4)" }}
           >
-            <span
-              className="text-[11px] font-mono w-5 shrink-0 pt-[2px] tabular-nums"
-              style={{ color: "var(--g6)" }}
-            >
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-baseline gap-x-2.5 mb-1">
-                <span className="text-[13px] font-medium" style={{ color: "var(--g11)" }}>
-                  {s.step}
-                </span>
-                <span
-                  className="text-[11px] font-mono px-1.5 py-0.5 rounded"
-                  style={{ color: "var(--g8)", background: "var(--g3)" }}
-                >
-                  {s.tech}
-                </span>
-              </div>
-              <p className="text-[12px] leading-relaxed" style={{ color: "var(--g8)" }}>
-                {s.detail}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+            {s.tech}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
 
-function RoamSample({ data }: { data: typeof PROJECTS[0]["sampleOutput"] }) {
-  if (!("days" in data) || !data.days) return null;
-  return (
-    <div className="my-7 terminal">
-      <div className="terminal-bar">
-        <div className="terminal-dot" style={{ background: "#ff5f57" }} />
-        <div className="terminal-dot" style={{ background: "#febc2e" }} />
-        <div className="terminal-dot" style={{ background: "#28c840" }} />
-        <span className="ml-2 text-[11px]" style={{ color: "var(--g8)" }}>{data.label}</span>
-      </div>
-      <div className="px-4 py-3 space-y-4">
-        {data.days.map((day) => (
-          <div key={day.day}>
-            <p className="text-[11px] uppercase tracking-widest mb-2" style={{ color: "var(--g7)" }}>
-              {day.day}
-            </p>
-            {day.stops.map((stop) => (
-              <div key={stop.name} className="flex gap-3 mb-2">
-                <span className="text-[11px] font-mono tabular-nums pt-[1px] w-10 shrink-0" style={{ color: "var(--g7)" }}>
-                  {stop.time}
-                </span>
-                <div>
-                  <span className="text-[13px] font-medium" style={{ color: "var(--g11)" }}>{stop.name}</span>
-                  <span className="text-[12px] ml-2" style={{ color: "var(--g7)" }}>{stop.area}</span>
-                  <p className="text-[12px] leading-relaxed" style={{ color: "var(--g7)" }}>{stop.note}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function DothrakiSample({ data }: { data: typeof PROJECTS[1]["sampleOutput"] }) {
-  if (!("steps" in data) || !data.steps) return null;
-  return (
-    <div className="my-7 terminal">
-      <div className="terminal-bar">
-        <div className="terminal-dot" style={{ background: "#ff5f57" }} />
-        <div className="terminal-dot" style={{ background: "#febc2e" }} />
-        <div className="terminal-dot" style={{ background: "#28c840" }} />
-        <span className="ml-2 text-[11px]" style={{ color: "var(--g8)" }}>{data.label}</span>
-      </div>
-      <div className="px-4 py-4 space-y-2.5">
-        {data.steps.map((s, i) => (
-          <div key={i} className="flex gap-4">
-            <span
-              className="text-[11px] font-mono w-28 shrink-0 pt-[2px]"
-              style={{ color: "var(--g7)" }}
-            >
-              {s.label}
-            </span>
-            <span
-              className="text-[13px] font-mono"
-              style={{ color: i === data.steps!.length - 1 ? "var(--g12)" : "var(--g10)" }}
-            >
-              {s.value}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function Projects() {
   return (
@@ -142,60 +69,48 @@ export default function Projects() {
         </h1>
 
         <div>
-          {PROJECTS.map((project, i) => (
+          {PROJECTS.map((project, i) => {
+            const accent = PROJECT_ACCENTS[i] ?? PROJECT_ACCENTS[0];
+            return (
             <div
               key={project.slug}
               data-animate
               style={{ "--stagger": i + 1 } as React.CSSProperties}
             >
-              {/* Header */}
-              <div className="flex items-start justify-between gap-4 mb-2">
-                <h2 className="text-[20px] font-semibold tracking-tight" style={{ color: "var(--g12)" }}>
+              <div
+                className="w-8 h-0.5 rounded-full mb-4"
+                style={{ background: accent }}
+              />
+              <div className="flex items-baseline justify-between gap-4 mb-1">
+                <h2 className="text-[18px] font-semibold tracking-tight" style={{ color: "var(--g12)" }}>
                   {project.name}
                 </h2>
-                <div className="flex items-center gap-2.5 shrink-0 mt-1">
+                <div className="flex items-center gap-3 shrink-0">
                   {project.demo && (
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener"
-                      className="link-dim text-[12px]"
-                    >
+                    <a href={project.demo} target="_blank" rel="noopener" className="link-dim text-[12px]">
                       Demo ↗
                     </a>
                   )}
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener"
-                    className="link-dim text-[12px]"
-                  >
+                  <a href={project.github} target="_blank" rel="noopener" className="link-dim text-[12px]">
                     GitHub ↗
                   </a>
                 </div>
               </div>
 
-              <p className="text-[12px] italic mb-4" style={{ color: "var(--g8)" }}>
+              <p className="text-[12px] mb-4" style={{ color: "var(--g8)" }}>
                 {project.tagline}
-              </p>
-              <p className="text-[14px] leading-[1.75] mb-1" style={{ color: "var(--g10)" }}>
-                {project.description}
               </p>
 
               <Pipeline steps={project.pipeline} />
 
-              {"days" in project.sampleOutput
-                ? <RoamSample data={project.sampleOutput} />
-                : <DothrakiSample data={project.sampleOutput} />
-              }
+              {(() => { const Demo = PROJECT_DEMOS[i]; return Demo ? <Demo /> : null; })()}
 
-              {/* Stack */}
-              <div className="flex flex-wrap gap-2 mt-1">
+              <div className="flex flex-wrap gap-1.5 mt-4">
                 {project.stack.map((t) => (
                   <span
                     key={t}
                     className="text-[11px] font-mono px-2 py-0.5 rounded"
-                    style={{ color: "var(--g8)", background: "var(--g2)", border: "1px solid var(--g4)" }}
+                    style={{ color: "var(--g7)", background: "var(--g2)", border: "1px solid var(--g4)" }}
                   >
                     {t}
                   </span>
@@ -203,13 +118,11 @@ export default function Projects() {
               </div>
 
               {i < PROJECTS.length - 1 && (
-                <div
-                  className="my-16"
-                  style={{ borderBottom: "1px solid var(--g3)" }}
-                />
+                <div className="my-14" style={{ borderBottom: "1px solid var(--g3)" }} />
               )}
             </div>
-          ))}
+            );
+          })}
         </div>
       </main>
 

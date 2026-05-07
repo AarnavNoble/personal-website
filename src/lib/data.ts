@@ -68,7 +68,7 @@ export const PROJECTS = [
   {
     slug: "roam",
     name: "Roam",
-    tagline: "AI travel itinerary generator with a real ML stack underneath",
+    tagline: "AI travel planner built on dense retrieval, learning-to-rank, and route optimization — not an LLM wrapper.",
     description:
       "Give it a destination, trip length, transport mode, and interests — it returns a day-by-day itinerary with stops ordered to minimize travel time. Most AI travel apps are LLM wrappers. Roam builds the actual ML stack: dense retrieval, learning-to-rank, and combinatorial optimization, with the LLM used only for the final synthesis pass.",
     github: "https://github.com/AarnavNoble/roam",
@@ -131,7 +131,7 @@ export const PROJECTS = [
   {
     slug: "dothraki-asr",
     name: "Dothraki ASR",
-    tagline: "Zero-shot speech recognition for a language that has never appeared in any training dataset",
+    tagline: "Zero-shot ASR for a constructed language with zero training data — phoneme matching against the Dothraki lexicon.",
     description:
       "Dothraki was invented by linguist David J. Peterson for HBO's Game of Thrones. It has a documented phonology and a 4,000-word lexicon — but zero representation in any ASR training set. This project tests whether multilingual Whisper can produce useful output when run zero-shot on Dothraki audio, and whether that output can be mapped back to real Dothraki words via phoneme matching.",
     github: "https://github.com/AarnavNoble/dothraki-asr",
