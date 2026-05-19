@@ -36,7 +36,7 @@ export function DotCanvas() {
           const alpha = 0.11 + t * 0.22;
           ctx.beginPath();
           ctx.arc(x, y, radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+          ctx.fillStyle = `rgba(200,215,240,${alpha})`;
           ctx.fill();
         }
       }

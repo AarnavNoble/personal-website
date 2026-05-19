@@ -1,28 +1,32 @@
 @import "tailwindcss";
 
-/* ── Gray scale (12-step, dark) ─────────────────────────── */
+/* ── Palette ─────────────────────────────────────────────── */
 :root {
-  --bg: #0c0c0c;
-  --fg: #f0f0f0;
-  --g1: #111;
-  --g2: #161616;
-  --g3: #1c1c1c;
-  --g4: #242424;
-  --g5: #2e2e2e;
-  --g6: #383838;
-  --g7: #484848;
-  --g8: #606060;
-  --g9: #7a7a7a;
-  --g10: #979797;
-  --g11: #b8b8b8;
-  --g12: #ededed;
+  --bg: #080808;
+  --fg: #f0ede5;
+  --g1: #0d0d0d;
+  --g2: #141414;
+  --g3: #1e1e1e;
+  --g4: #282828;
+  --g5: #333333;
+  --g6: #4a4a4a;
+  --g7: #666666;
+  --g8: #888888;
+  --g9: #aaaaaa;
+  --g10: #c4c4c4;
+  --g11: #dddddd;
+  --g12: #f0ede5;
+  --accent: #6c8ebf;
+  --accent-dim: rgba(108,142,191,0.09);
+  --accent-border: rgba(108,142,191,0.25);
 }
 
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 html {
@@ -33,51 +37,69 @@ html {
 body {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), "DM Sans", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection { background: rgba(255,255,255,0.1); }
+.font-display {
+  font-family: var(--font-display), "Syne", system-ui, sans-serif;
+}
 
-/* ── Stagger animation (exact from paco.me) ─────────────── */
+::selection { background: rgba(108,142,191,0.22); }
+
+/* ── Stagger animation ───────────────────────────────────── */
 @keyframes enter {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0);   }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 [data-animate] {
-  animation: 0.55s both enter;
-  animation-delay: calc(var(--stagger, 0) * 0.1s + var(--start, 0s));
+  animation: 0.6s both enter;
+  animation-delay: calc(var(--stagger, 0) * 0.08s + var(--start, 0s));
 }
 
-/* ── Link underlines ────────────────────────────────────── */
+/* ── Ticker ──────────────────────────────────────────────── */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 40s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Link underlines ─────────────────────────────────────── */
 .link {
   text-decoration: underline;
-  text-decoration-color: var(--g7);
+  text-decoration-color: var(--g6);
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   transition: text-decoration-color 0.15s ease;
   color: var(--g12);
 }
-.link:hover {
-  text-decoration-color: var(--g11);
-}
+.link:hover { text-decoration-color: var(--g10); }
 
 .link-dim {
   text-decoration: underline;
-  text-decoration-color: var(--g6);
+  text-decoration-color: var(--g5);
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   transition: text-decoration-color 0.15s ease, color 0.15s ease;
-  color: var(--g9);
+  color: var(--g8);
 }
 .link-dim:hover {
-  text-decoration-color: var(--g9);
+  text-decoration-color: var(--g8);
   color: var(--g11);
 }
 
-/* ── Blur fade (sticky top header backdrop) ─────────────── */
+/* ── Blur fade ───────────────────────────────────────────── */
 .blur-fade {
   position: sticky;
   top: 0;
@@ -85,10 +107,10 @@ body {
   margin-bottom: -80px;
   pointer-events: none;
   z-index: 10;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(to bottom, black 25%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 25%, transparent 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
 }
 .blur-fade::after {
   content: '';
@@ -97,7 +119,7 @@ body {
   background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
 }
 
-/* ── Terminal block ─────────────────────────────────────── */
+/* ── Terminal block ──────────────────────────────────────── */
 .terminal {
   font-family: var(--font-mono), ui-monospace, monospace;
   background: var(--g2);
@@ -113,12 +135,9 @@ body {
   align-items: center;
   gap: 6px;
 }
-.terminal-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-}
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-/* ── Scrollbar ──────────────────────────────────────────── */
+/* ── Scrollbar ───────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--g5); border-radius: 2px; }

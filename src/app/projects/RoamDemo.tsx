@@ -62,15 +62,15 @@ export function RoamDemo() {
   return (
     <div
       className="rounded-xl overflow-hidden mt-6"
-      style={{ border: "1px solid rgba(59,130,246,0.25)", background: "rgba(59,130,246,0.03)" }}
+      style={{ border: "1px solid rgba(108,142,191,0.25)", background: "rgba(108,142,191,0.03)" }}
     >
       {/* Header */}
       <div
         className="px-4 py-2.5 flex items-center justify-between"
-        style={{ borderBottom: "1px solid rgba(59,130,246,0.15)", background: "rgba(59,130,246,0.05)" }}
+        style={{ borderBottom: "1px solid rgba(108,142,191,0.15)", background: "rgba(108,142,191,0.05)" }}
       >
         <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#3b82f6" }} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#6c8ebf" }} />
           <span className="text-[11px] font-mono" style={{ color: "var(--g8)" }}>roam / live demo</span>
         </div>
         {phase !== "idle" && (
@@ -123,7 +123,7 @@ export function RoamDemo() {
                       className="px-2.5 py-1 rounded text-[11px] font-mono transition-all"
                       style={
                         interests.includes(i)
-                          ? { background: "rgba(59,130,246,0.2)", border: "1px solid rgba(59,130,246,0.5)", color: "#93c5fd" }
+                          ? { background: "rgba(108,142,191,0.2)", border: "1px solid rgba(108,142,191,0.5)", color: "#a8c0de" }
                           : { background: "var(--g2)", border: "1px solid var(--g4)", color: "var(--g7)" }
                       }
                     >
@@ -138,7 +138,7 @@ export function RoamDemo() {
                 disabled={!city.trim()}
                 className="w-full py-2 rounded text-[13px] font-medium transition-all"
                 style={{
-                  background: city.trim() ? "#3b82f6" : "var(--g3)",
+                  background: city.trim() ? "#6c8ebf" : "var(--g3)",
                   color: city.trim() ? "#fff" : "var(--g6)",
                   cursor: city.trim() ? "pointer" : "not-allowed",
                 }}
@@ -172,8 +172,8 @@ export function RoamDemo() {
                       transition={{ delay: i * 0.05, duration: 0.2 }}
                       className="flex items-center gap-3 py-1.5 px-2.5 rounded"
                       style={{
-                        background: active ? "rgba(59,130,246,0.08)" : done ? "rgba(34,197,94,0.05)" : "transparent",
-                        border: active ? "1px solid rgba(59,130,246,0.2)" : "1px solid transparent",
+                        background: active ? "rgba(108,142,191,0.08)" : done ? "rgba(34,197,94,0.05)" : "transparent",
+                        border: active ? "1px solid rgba(108,142,191,0.2)" : "1px solid transparent",
                       }}
                     >
                       <span className="w-4 h-4 shrink-0 flex items-center justify-center">
@@ -184,7 +184,7 @@ export function RoamDemo() {
                             style={{ color: "#22c55e", fontSize: 12 }}
                           >✓</motion.span>
                         ) : active ? (
-                          <span className="w-2.5 h-2.5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "#3b82f6", borderTopColor: "transparent" }} />
+                          <span className="w-2.5 h-2.5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "#6c8ebf", borderTopColor: "transparent" }} />
                         ) : (
                           <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--g5)" }} />
                         )}
