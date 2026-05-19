@@ -17,7 +17,7 @@ const PIPELINE = [
 const STEP_DURATION = 650;
 
 const sample = PROJECTS[0].sampleOutput;
-const DAYS = "days" in sample ? sample.days : [];
+const DAYS: { day: string; stops: { time: string; name: string; area: string; note: string }[] }[] = "days" in sample ? sample.days : [];
 
 type Phase = "idle" | "running" | "done";
 
