@@ -3,33 +3,63 @@
 import Link from "next/link";
 import { useState } from "react";
 import { EXPERIENCE, EDUCATION, LINKS } from "@/lib/data";
+import { AethexDemo } from "./AethexDemo";
+import { ClimateDemo } from "./ClimateDemo";
+
+const ROLE_DEMOS = [AethexDemo, ClimateDemo];
 
 const ROLE_META = [
   {
     domain: "Voice AI · Infrastructure",
-    highlight: "Built 100+ API endpoints and Kubernetes infrastructure running 500+ pods in production.",
     tags: ["AWS/EKS", "Kubernetes", "Terraform", "WebRTC", "Python"],
     color: "#6c8ebf",
   },
   {
     domain: "Climate ML",
-    highlight: "5× spatial coverage improvement on Lake Erie forecasting using a basin-wide GNN.",
     tags: ["PyTorch", "GNN", "XGBoost", "Satellite data"],
     color: "#34d399",
   },
   {
     domain: "Systems · DevOps",
-    highlight: "Automated OS deployment for 2,000+ devices, cutting imaging time by 50%.",
     tags: ["PXE boot", "Bash", "DSM", "IT systems"],
     color: "#9ca3af",
   },
   {
     domain: "Embedded · Aerospace",
-    highlight: "Satellite thermal controller and I2C temperature sensor driver under FreeRTOS.",
     tags: ["C", "FreeRTOS", "STM32", "MATLAB/Simulink", "I2C"],
     color: "#a78bfa",
   },
 ];
+
+function Log({ items, color }: { items: string[]; color: string }) {
+  return (
+    <div className="my-4 rounded-lg overflow-hidden flex-1" style={{ border: "1px solid var(--g3)" }}>
+      <div className="px-3.5 py-2 flex items-center gap-2" style={{ background: "var(--g2)", borderBottom: "1px solid var(--g3)" }}>
+        <div className="w-1 h-1 rounded-full" style={{ background: color }} />
+        <span className="text-[10px] uppercase tracking-[0.12em] font-mono font-medium" style={{ color: "var(--g6)" }}>
+          Shipped
+        </span>
+      </div>
+      {items.map((item, i) => (
+        <div
+          key={i}
+          className="flex items-start gap-3 px-3.5 py-2.5"
+          style={{
+            borderBottom: i < items.length - 1 ? "1px solid var(--g3)" : "none",
+            background: "var(--g1)",
+          }}
+        >
+          <span className="text-[10px] font-mono w-5 shrink-0 tabular-nums pt-px" style={{ color: "var(--g5)" }}>
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span className="text-[12.5px] leading-[1.6]" style={{ color: "var(--g8)" }}>
+            {item}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function Work() {
   const [hovered, setHovered] = useState<number | null>(null);
@@ -59,8 +89,8 @@ export default function Work() {
           </h1>
         </div>
 
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+        {/* Cards */}
+        <div className="flex flex-col gap-5 mb-16">
           {EXPERIENCE.map((role, i) => {
             const meta = ROLE_META[i];
             const isHovered = hovered === i;
@@ -107,10 +137,9 @@ export default function Work() {
                     {role.role.split(",")[0]} · {role.detail.split("·")[0].trim()}
                   </p>
 
-                  {/* Highlight */}
-                  <p className="text-[14px] leading-[1.65] flex-1 mb-5" style={{ color: "var(--g8)" }}>
-                    {meta.highlight}
-                  </p>
+                  <Log items={role.bullets} color={meta.color} />
+
+                  {(() => { const Demo = ROLE_DEMOS[i]; return Demo ? <Demo /> : null; })()}
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5">
