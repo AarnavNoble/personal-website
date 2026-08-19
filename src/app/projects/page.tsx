@@ -4,9 +4,10 @@ import Link from "next/link";
 import { PROJECTS, LINKS } from "@/lib/data";
 import { RoamDemo } from "./RoamDemo";
 import { DothrakiDemo } from "./DothrakiDemo";
+import { VestigeDemo } from "./VestigeDemo";
 
-const PROJECT_ACCENTS = ["#6c8ebf", "#34d399"];
-const PROJECT_DEMOS = [RoamDemo, DothrakiDemo];
+const PROJECT_ACCENTS = ["#6c8ebf", "#34d399", "#E8A33D", "#ef4444"];
+const PROJECT_DEMOS = [RoamDemo, DothrakiDemo, VestigeDemo, undefined];
 
 function Pipeline({ steps, accent }: { steps: typeof PROJECTS[0]["pipeline"]; accent: string }) {
   return (

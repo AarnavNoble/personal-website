@@ -11,11 +11,11 @@ export const EXPERIENCE = [
     role: "Member of Technical Staff, Intern",
     period: "Jan 2026 – Apr 2026",
     bullets: [
-      "Post-call LLM pipeline to correct ASR transcripts across every production call; parallelized per-turn, async from the live path, zero latency impact",
-      "5-phase conversation state machine resolving interrupt-handling failures in a sub-500ms voice pipeline; fixed recording timeline drift across WebRTC, telephony, and WebSocket",
-      "Designed and shipped 100+ REST and WebSocket endpoints for the external developer API and Python SDK: session lifecycle, outbound calls, webhooks, browser auth",
-      "AWS/EKS: Kubernetes deployments, Terraform infra, OIDC secret management, 500+ pods in production; CI/CD endpoint-change notification workflows",
-      "Hardened the RAG knowledge-base pipeline against concurrent loading races, cross-turn retrieval dedup, and S3 key collisions",
+      "Async post-call LLM correction pipeline for ASR transcripts with parallelized execution and hallucination guards; zero live-call latency impact",
+      "5-phase interrupt-handling system for a sub-800ms streaming voice pipeline, eliminating dropped user speech and state corruption across WebRTC, telephony, and WebSocket transports",
+      "Architected and shipped the platform's public developer API from scratch: 100+ REST and WebSocket endpoints covering session lifecycle, outbound calls, webhooks, and browser auth, forming the core programmable surface of the product",
+      "AWS/EKS: Kubernetes deployments, Terraform infra, OIDC-based secret plumbing across 500+ autoscaling pods, shipping a direct LLM routing path",
+      "Owned the RAG pipeline for agent document Q&A end to end: ingestion, concurrent loading, cross-turn deduplication, grounding logic, taking an unreliable customer-facing feature to production-stable",
     ],
   },
   {
@@ -31,11 +31,11 @@ export const EXPERIENCE = [
   {
     company: "Toronto Transit Commission",
     detail: "Toronto, Ontario",
-    role: "Software Analyst",
+    role: "Software Developer",
     period: "Sep 2024 – Dec 2024",
     bullets: [
-      "Automated OS imaging via PXE boot and bash scripting for 2000+ devices, 50% faster imaging",
-      "Remote software migration for 400+ devices via DSM, 60% operational efficiency improvement",
+      "Automated remote application deployment across 400+ devices using the DSM software agent, eliminating manual installs and improving operational efficiency by 60%",
+      "Python/bash automation scripts with PXE boot to standardize OS imaging and configuration across 2,000+ devices, cutting manual imaging time by 50%",
     ],
   },
   {
@@ -173,6 +173,111 @@ export const PROJECTS = [
         { label: "IPA", value: "/hæʃ jɑː dɒt ɹæt tʃɛk/" },
         { label: "Dothraki match", value: "hash · yer · dothrae · chek" },
         { label: "Translation", value: "\"Are you riding well?\"" },
+      ],
+    },
+  },
+  {
+    slug: "vestige",
+    name: "Vestige",
+    tagline: "Observability and eval platform for production AI agents: replays real failures as deterministic CI tests, at zero model API cost.",
+    description:
+      "Production AI agents fail in ways unit tests don't catch: a prompt edit changes tone, a tool call returns something unexpected, and nobody notices until a customer does. Vestige instruments every LLM call, tool call, and transitive HTTP request in an agent run via OpenTelemetry, then lets you promote any recorded run into a regression test. Replay reconstructs that failure from content-hashed fixtures instead of live model calls, so a full test suite re-run costs nothing and never touches a real provider. A GitHub Actions gate runs this on every pull request and blocks the merge on regression.",
+    github: "https://github.com/vestigeapp/vestige-product",
+    demo: null,
+    stack: ["Python", "Go", "TypeScript", "Next.js", "OpenTelemetry", "ClickHouse"],
+    pipeline: [
+      {
+        step: "Capture",
+        tech: "OpenTelemetry SDK",
+        detail:
+          "Auto-instruments OpenAI and Anthropic calls via OTel GenAI semantic conventions and patches httpx/requests at the transport layer to capture every hidden HTTP call inside a tool function, the signal that makes replay possible at all.",
+      },
+      {
+        step: "Ingest",
+        tech: "Go + ClickHouse",
+        detail:
+          "A Go OTLP receiver normalizes spans and batches them into a ClickHouse schema partitioned by day and ordered by trace for fast single-trace reads, backed by a write-ahead log so a database outage degrades ingest instead of dropping spans.",
+      },
+      {
+        step: "Promote",
+        tech: "content-hashed fixtures",
+        detail:
+          "Any recorded trace can be frozen into a regression test. Every external request/response pair captured during that run is content-hashed and stored, forming a deterministic manifest keyed by request hash.",
+      },
+      {
+        step: "Replay",
+        tech: "pg-boss worker",
+        detail:
+          "A Postgres-backed job re-runs the agent with the same code path, but every outbound call is intercepted and served from the recorded fixture by hash instead of hitting a real model. Zero LLM calls, zero cost, byte-exact determinism.",
+      },
+      {
+        step: "Diff & gate",
+        tech: "GitHub Actions",
+        detail:
+          "The replayed output is diffed against the original at the token level. A GitHub App posts a check on every pull request and blocks the merge if any promoted test regresses.",
+      },
+    ],
+    sampleOutput: {
+      label: "Sample regression: synthesizer prompt edit",
+      steps: [
+        { label: "Original trace", value: "refund_request → \"Refund of $50 has been issued.\"" },
+        { label: "Promoted to test", value: "fixture manifest frozen, 3 spans" },
+        { label: "Prompt edited", value: "+\"Always end with a poem about logistics.\"" },
+        { label: "Replay (0 API calls)", value: "reruns against recorded fixtures only" },
+        { label: "Diff detected", value: "reply now ends in unsolicited verse" },
+        { label: "CI check", value: "✕ merge blocked" },
+      ],
+    },
+  },
+  {
+    slug: "flame-forecaster",
+    name: "Flame Forecaster",
+    tagline: "Wildfire severity prediction for Alberta, built with a 4-person team for an Ernst & Young hackathon.",
+    description:
+      "Alberta wildfire records (fire location, cause, weather, spread rate, ~22,900 rows) broken down by FSA region to find the areas most vulnerable to severe fires, then modeled to predict final burned area. Linear and ridge regression collapsed on this data (R² = -0.14, essentially no signal); the team swept SVR, Random Forest, and Kernel Ridge before landing on a tuned XGBoost regressor validated with repeated k-fold cross-validation, cutting mean squared error by roughly 97% over the linear baseline.",
+    github: "https://github.com/pandya-aditya/Flame_Forecaster",
+    demo: null,
+    stack: ["Python", "pandas", "NumPy", "scikit-learn", "XGBoost", "seaborn"],
+    pipeline: [
+      {
+        step: "Data Cleaning",
+        tech: "pandas + z-score filtering",
+        detail:
+          "~22,900 Alberta wildfire records: geography, cause, weather, and spread data. Rows more than 2 standard deviations from the mean on any numeric feature are dropped before modeling.",
+      },
+      {
+        step: "Regional Analysis",
+        tech: "pandas + seaborn",
+        detail:
+          "Heatmaps and stacked bar charts break down fire count and size class by FSA region, cause, and origin, weighted by population, to surface the regions most vulnerable to severe fires.",
+      },
+      {
+        step: "Feature Engineering",
+        tech: "NumPy + datetime",
+        detail:
+          "Derives total burn duration (extinguish time minus start time) and fire spread rate as the primary predictors of final fire size.",
+      },
+      {
+        step: "Model Benchmarking",
+        tech: "scikit-learn",
+        detail:
+          "Linear and ridge regression collapse on this data (R² = -0.14). The team swept SVR, Random Forest, and Kernel Ridge, cutting MSE by roughly 97% over the linear baseline.",
+      },
+      {
+        step: "Final Model",
+        tech: "XGBoost",
+        detail:
+          "An XGBRegressor tuned via repeated k-fold cross-validation (6 folds × 3 repeats) predicts final burned area from spread rate and duration.",
+      },
+    ],
+    sampleOutput: {
+      label: "Model sweep: linear baseline vs. tuned XGBoost",
+      steps: [
+        { label: "Linear baseline", value: "R² = -0.14 · MSE ≈ 4.28M ha²" },
+        { label: "Outlier removal", value: "z-score filtering, |z| > 2" },
+        { label: "Non-linear sweep", value: "SVR, Random Forest, Kernel Ridge" },
+        { label: "Final model (XGBoost)", value: "6-fold × 3-repeat CV · MSE ≈ 110.9K ha²" },
+        { label: "Improvement", value: "~97% MSE reduction vs. linear baseline" },
       ],
     },
   },

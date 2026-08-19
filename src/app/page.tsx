@@ -32,7 +32,7 @@ export default function Home() {
       photoRef.current.style.transform = "perspective(800px) rotateY(0deg) rotateX(0deg) scale(1)";
   }
 
-  const PROJECT_ACCENTS = ["#6c8ebf", "#34d399"];
+  const PROJECT_ACCENTS = ["#6c8ebf", "#34d399", "#E8A33D", "#ef4444"];
 
   function copyEmail() {
     navigator.clipboard.writeText(LINKS.email).then(() => {
@@ -111,7 +111,7 @@ export default function Home() {
 
             <p data-animate style={{ "--stagger": 2, color: "var(--g7)" } as React.CSSProperties} className="text-[17px] leading-[1.8] mb-8">
               Computer Engineering at Waterloo. I build things at the
-              intersection of ML and systems — currently voice AI infrastructure,
+              intersection of ML and systems, currently voice AI infrastructure,
               previously climate research and satellite firmware.
             </p>
 
@@ -289,7 +289,7 @@ export default function Home() {
 
       <footer className="max-w-[1200px] mx-auto px-10 pb-10 w-full" style={{ position: "relative", zIndex: 2 }}>
         <p className="text-[11px] font-mono" style={{ color: "var(--g5)" }}>
-          g · l · e — GitHub · LinkedIn · Email
+          g · l · e · GitHub · LinkedIn · Email
         </p>
       </footer>
     </div>
