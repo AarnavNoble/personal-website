@@ -6,7 +6,6 @@ import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
 
 // ─── Data ─────────────────────────────────────────────────────────────────
 const NOW = [
-  { label: "building", value: "voice AI infrastructure · AethexAI, London" },
   { label: "studying", value: "Computer Engineering · University of Waterloo" },
 ];
 
@@ -111,8 +110,8 @@ export default function Home() {
 
             <p data-animate style={{ "--stagger": 2, color: "var(--g7)" } as React.CSSProperties} className="text-[17px] leading-[1.8] mb-8">
               Computer Engineering at Waterloo. I build things at the
-              intersection of ML and systems, currently voice AI infrastructure,
-              previously climate research and satellite firmware.
+              intersection of ML and systems: previously voice AI infrastructure,
+              climate research, and satellite firmware.
             </p>
 
             <div data-animate style={{ "--stagger": 3 } as React.CSSProperties} className="flex flex-wrap gap-2 mb-9">
@@ -166,10 +165,9 @@ export default function Home() {
               </span>
               <span className="text-[12px] font-mono" style={{ color: "var(--g6)" }}>now · May 2026</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2" style={{ background: "var(--g1)" }}>
-              {NOW.map((item, i) => (
-                <div key={item.label} className="flex items-baseline gap-4 px-5 py-3.5"
-                  style={{ borderRight: i % 2 === 0 ? "1px solid var(--g3)" : "none" }}>
+            <div className="grid grid-cols-1" style={{ background: "var(--g1)" }}>
+              {NOW.map((item) => (
+                <div key={item.label} className="flex items-baseline gap-4 px-5 py-3.5">
                   <span className="text-[10px] font-mono uppercase tracking-wider w-20 shrink-0" style={{ color: "var(--accent)" }}>
                     {item.label}
                   </span>

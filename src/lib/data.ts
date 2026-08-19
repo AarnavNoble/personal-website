@@ -7,8 +7,8 @@ export const LINKS = {
 export const EXPERIENCE = [
   {
     company: "AethexAI",
-    detail: "Stealth voice AI startup · London, UK",
-    role: "Member of Technical Staff, Intern",
+    detail: "Formerly a stealth voice AI startup · London, UK",
+    role: "Member of Technical Staff Intern",
     period: "Jan 2026 – Apr 2026",
     bullets: [
       "Async post-call LLM correction pipeline for ASR transcripts with parallelized execution and hallucination guards; zero live-call latency impact",
