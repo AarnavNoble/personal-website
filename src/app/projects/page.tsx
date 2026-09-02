@@ -7,7 +7,8 @@ import { DothrakiDemo } from "./DothrakiDemo";
 import { VestigeDemo } from "./VestigeDemo";
 
 const PROJECT_ACCENTS = ["#6c8ebf", "#34d399", "#E8A33D", "#ef4444"];
-const PROJECT_DEMOS = [RoamDemo, DothrakiDemo, VestigeDemo, undefined];
+// Order must track PROJECTS in src/lib/data.ts: vestige, roam, dothraki-asr, flame-forecaster
+const PROJECT_DEMOS = [VestigeDemo, RoamDemo, DothrakiDemo, undefined];
 
 function Pipeline({ steps, accent }: { steps: typeof PROJECTS[0]["pipeline"]; accent: string }) {
   return (

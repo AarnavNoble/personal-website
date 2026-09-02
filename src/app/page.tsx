@@ -7,6 +7,7 @@ import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
 // ─── Data ─────────────────────────────────────────────────────────────────
 const NOW = [
   { label: "studying", value: "Computer Engineering · University of Waterloo" },
+  { label: "open to", value: "SWE / ML-infra co-op · Winter 2027" },
 ];
 
 const INTERESTS = ["photography", "film", "soccer", "MMA", "tennis", "travel"];
@@ -99,7 +100,7 @@ export default function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-50" style={{ background: "var(--accent)" }} />
                 <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: "var(--accent)" }} />
               </span>
-              <span className="text-[12px] font-mono" style={{ color: "var(--g6)" }}>London, UK · on co-op</span>
+              <span className="text-[12px] font-mono" style={{ color: "var(--g6)" }}>Waterloo, ON · back on campus</span>
             </div>
 
             <h1
@@ -111,9 +112,11 @@ export default function Home() {
             </h1>
 
             <p data-animate style={{ "--stagger": 2, color: "var(--g7)" } as React.CSSProperties} className="text-[17px] leading-[1.8] mb-8">
-              Computer Engineering at Waterloo. I build things at the
-              intersection of ML and systems: previously voice AI infrastructure,
-              climate research, and satellite firmware.
+              Computer Engineering at Waterloo, working the seam between machine
+              learning and systems: the infrastructure that keeps models fast,
+              observable, and hard to break. Recently a sub-500ms voice-agent
+              platform, a graph neural net for lake-water forecasting, and a
+              flight recorder for AI agents.
             </p>
 
             <div data-animate style={{ "--stagger": 3 } as React.CSSProperties} className="flex flex-wrap gap-2 mb-9">
@@ -166,7 +169,7 @@ export default function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "var(--accent)" }} />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: "var(--accent)" }} />
               </span>
-              <span className="text-[12px] font-mono" style={{ color: "var(--g6)" }}>now · May 2026</span>
+              <span className="text-[12px] font-mono" style={{ color: "var(--g6)" }}>now · Sep 2026</span>
             </div>
             <div className="grid grid-cols-1" style={{ background: "var(--g1)" }}>
               {NOW.map((item) => (

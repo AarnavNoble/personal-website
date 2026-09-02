@@ -29,6 +29,11 @@ const ROLE_META = [
     tags: ["C", "FreeRTOS", "STM32", "MATLAB/Simulink", "I2C"],
     color: "#a78bfa",
   },
+  {
+    domain: "Full-stack · Shopify",
+    tags: ["Go", "Kubernetes", "GraphQL", "React", "OAuth"],
+    color: "#e879a8",
+  },
 ];
 
 function Log({ items, color }: { items: string[]; color: string }) {

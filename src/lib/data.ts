@@ -8,15 +8,16 @@ export const LINKS = {
 export const EXPERIENCE = [
   {
     company: "AethexAI",
-    detail: "Voice AI infrastructure · London, UK",
+    detail: "Voice AI infrastructure · San Francisco, CA",
     role: "Member of Technical Staff Intern",
     period: "Jan 2026 – Apr 2026",
     bullets: [
-      "Async post-call LLM correction pipeline for ASR transcripts with parallelized execution and hallucination guards; zero live-call latency impact",
-      "5-phase interrupt-handling system for a sub-800ms streaming voice pipeline, eliminating dropped user speech and state corruption across WebRTC, telephony, and WebSocket transports",
-      "Architected and shipped the platform's public developer API from scratch: 100+ REST and WebSocket endpoints covering session lifecycle, outbound calls, webhooks, and browser auth, forming the core programmable surface of the product",
-      "AWS/EKS: Kubernetes deployments, Terraform infra, OIDC-based secret plumbing across 500+ autoscaling pods, shipping a direct LLM routing path",
-      "Owned the RAG pipeline for agent document Q&A end to end: ingestion, concurrent loading, cross-turn deduplication, grounding logic, taking an unreliable customer-facing feature to production-stable",
+      "Built the platform's public API and Python SDK from scratch, with 30+ endpoints for mid-call session control",
+      "Managed the production AWS/EKS platform on Kubernetes, Terraform, and CI/CD across 500+ pods",
+      "Hardened the sub-500ms voice pipeline to 75+ concurrent calls, fixing state races and null crashes under load",
+      "Designed a 5-phase interrupt state machine spanning 3 transports, ending dropped speech and state corruption",
+      "Rebuilt agent-document RAG across ingestion, concurrency, cross-turn dedup, and grounding over 10K+ chunks",
+      "Built a WebRTC call simulator that runs 200+ scripted call scenarios in CI, interrupts included",
     ],
   },
   {
@@ -25,8 +26,11 @@ export const EXPERIENCE = [
     role: "AI/ML Developer",
     period: "May 2025 – Aug 2025",
     bullets: [
-      "Basin-wide GNN (PyTorch) for Lake Erie concentration forecasting integrating satellite and atmospheric data; 5× spatial coverage vs. traditional approaches",
-      "XGBoost pipeline with multi-source spatial feature engineering (weather, satellite, soil), 85% accuracy improvement",
+      "Designed and built a PyTorch GNN, 4 message-passing layers over a 10K+ node basin graph",
+      "Beat gradient-boosted baselines by 85%, replacing hand-built spatial features with learned graph structure",
+      "Extended usable output 5x by generating forecasts at graph nodes with no observed data",
+      "Engineered 50+ spatial-temporal features and cut a full run from hours to minutes by vectorizing and parallelizing",
+      "Led ML on a 6-person research team from architecture to eval, presenting results toward a publication",
     ],
   },
   {
@@ -35,8 +39,9 @@ export const EXPERIENCE = [
     role: "Software Developer",
     period: "Sep 2024 – Dec 2024",
     bullets: [
-      "Automated remote application deployment across 400+ devices using the DSM software agent, eliminating manual installs and improving operational efficiency by 60%",
-      "Python/bash automation scripts with PXE boot to standardize OS imaging and configuration across 2,000+ devices, cutting manual imaging time by 50%",
+      "Built an idempotent deployment system that drove 10K+ devices to a declared software state from one config",
+      "Automated zero-touch OS provisioning with network-boot and Bash pipelines, cutting per-device setup ~50%",
+      "Wrote Python/Bash orchestration for staged patch and driver rollouts across 2K+ machines, with auto-retry on failure",
     ],
   },
   {
@@ -45,8 +50,20 @@ export const EXPERIENCE = [
     role: "Firmware & Control Systems Developer",
     period: "Jan 2024 – Dec 2024",
     bullets: [
-      "LM75BD temperature sensor driver in C over I2C with real-time over-temperature shutdown under FreeRTOS",
-      "STM32 satellite thermal controller in MATLAB/Simulink",
+      "Wrote an LM75BD temperature-sensor driver in C over I2C with real-time over-temp shutdown under FreeRTOS",
+      "Built an STM32 satellite thermal controller in MATLAB/Simulink",
+    ],
+  },
+  {
+    company: "Ontario Chamber of Commerce",
+    detail: "Toronto, Ontario",
+    role: "Software Developer",
+    period: "Jan 2024 – Apr 2024",
+    bullets: [
+      "Built 10+ configurable storefront widgets with a JSON-schema settings layer, customized by non-devs with no code",
+      "Built a Dockerized Go webhook service on Kubernetes that synced Shopify events into storefronts via GraphQL",
+      "Modeled 15+ Shopify Metaobject types as a custom data layer, bound to live storefront content",
+      "Secured the embedded app with session-token auth, scoped OAuth, and HMAC-verified webhooks against forged events",
     ],
   },
 ];
@@ -65,7 +82,7 @@ export const EDUCATION = {
   ],
 };
 
-export const PROJECTS = [
+const PROJECTS_RAW = [
   {
     slug: "roam",
     name: "Roam",
@@ -73,7 +90,7 @@ export const PROJECTS = [
     description:
       "Give it a destination, trip length, transport mode, and interests; it returns a day-by-day itinerary with stops ordered to minimize travel time. Most AI travel apps are LLM wrappers. Roam builds the actual ML stack: dense retrieval, learning-to-rank, and combinatorial optimization, with the LLM used only for the final synthesis pass.",
     github: "https://github.com/AarnavNoble/roam",
-    demo: "https://huggingface.co/spaces/AarnavNoble/roam",
+    demo: null,
     stack: ["Python", "FastAPI", "sentence-transformers", "FAISS", "LightGBM", "OR-Tools", "Groq", "React Native"],
     pipeline: [
       {
@@ -283,3 +300,9 @@ export const PROJECTS = [
     },
   },
 ];
+
+// Display order: Vestige is the flagship and leads.
+const PROJECT_ORDER = ["vestige", "roam", "dothraki-asr", "flame-forecaster"];
+export const PROJECTS = PROJECT_ORDER.map(
+  (slug) => PROJECTS_RAW.find((p) => p.slug === slug)!,
+);
