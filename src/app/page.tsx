@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
-import { FadeUp, Reveal, LineReveal } from "@/components/motion-lib";
+import { FadeUp, Reveal, CharReveal, Words, CountUp, Scramble, ScrollProgress } from "@/components/motion-lib";
 import { Backdrop } from "@/components/Backdrop";
 
 const SKILLS = [
@@ -14,9 +14,9 @@ const SKILLS = [
 ];
 
 const STATS = [
-  { n: "04", label: "internships shipped" },
-  { n: "03", label: "systems built from scratch" },
-  { n: "2028", label: "class of" },
+  { n: 4, pad: 2, label: "internships shipped" },
+  { n: 3, pad: 2, label: "systems built from scratch" },
+  { n: 2028, pad: 0, label: "class of" },
 ];
 
 const NOW = [
@@ -57,6 +57,7 @@ export default function Home() {
 
   return (
     <div className="grain relative min-h-screen overflow-x-clip">
+      <ScrollProgress />
       <Backdrop />
 
       {/* Nav */}
@@ -104,8 +105,8 @@ export default function Home() {
               className="font-display mt-6"
               style={{ fontSize: "var(--fs-hero)", fontWeight: 400, letterSpacing: "-0.05em", lineHeight: 0.92, color: "var(--g12)" }}
             >
-              <LineReveal immediate delay={0.15}>Aarnav</LineReveal>
-              <LineReveal immediate delay={0.28}>Noble</LineReveal>
+              <CharReveal text="Aarnav" delay={0.15} />
+              <CharReveal text="Noble" delay={0.42} />
             </h1>
 
             <FadeUp delay={0.5}>
@@ -185,7 +186,7 @@ export default function Home() {
                   className="font-serif leading-none"
                   style={{ fontSize: "clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem)", color: "var(--g12)" }}
                 >
-                  {s.n}
+                  <CountUp to={s.n} pad={s.pad} />
                 </div>
                 <div className="font-label mt-3 text-[10px]" style={{ color: "var(--g7)" }}>{s.label}</div>
               </div>
@@ -199,7 +200,7 @@ export default function Home() {
         <Reveal>
           <div className="flex items-end justify-between mb-6">
             <h2 className="font-display" style={{ fontSize: "clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
-              Selected work
+              <Words text="Selected work" />
             </h2>
             <Link href="/projects" className="link-dim text-[13px] mb-1.5">All projects →</Link>
           </div>
@@ -210,7 +211,9 @@ export default function Home() {
             <Reveal key={p.slug} delay={i * 0.06}>
               <Link href="/projects" className="work-row group">
                 <div className="flex items-baseline gap-4 sm:gap-6">
-                  <span className="font-label text-[10px] shrink-0 w-6" style={{ color: "var(--g6)" }}>0{i + 1}</span>
+                  <span className="font-label text-[10px] shrink-0 w-6" style={{ color: "var(--g6)" }}>
+                    <Scramble text={`0${i + 1}`} />
+                  </span>
                   <h3
                     className="work-name font-display"
                     style={{ fontSize: "clamp(1.7rem, 1.1rem + 2.6vw, 3rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g10)", lineHeight: 1 }}
@@ -276,7 +279,7 @@ export default function Home() {
           <div className="relative rounded-3xl p-10 sm:p-16 text-center overflow-hidden" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
             <div className="pointer-events-none absolute inset-x-0 bottom-[-60%] h-[120%]" style={{ background: "radial-gradient(closest-side, var(--accent-dim), transparent 70%)" }} />
             <h2 className="relative font-display" style={{ fontSize: "clamp(1.9rem, 1.3rem + 2.6vw, 3.25rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
-              Let&rsquo;s build something.
+              <Words text="Let’s build something." />
             </h2>
             <p className="relative mt-4 text-[15px]" style={{ color: "var(--g8)" }}>
               Open to co-op roles and interesting problems. Fastest way to reach me:

@@ -99,17 +99,25 @@ body {
 .link:hover { text-decoration-color: var(--g10); }
 
 .link-dim {
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
-  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+  position: relative;
+  transition: color 0.2s ease;
   color: var(--g8);
   text-decoration: none;
 }
-.link-dim:hover {
-  color: var(--g12);
-  text-decoration: underline;
-  text-decoration-color: var(--g6);
+.link-dim::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.link-dim:hover { color: var(--g12); }
+.link-dim:hover::after { transform: scaleX(1); }
 
 /* ── Blur fade ───────────────────────────────────────────── */
 .blur-fade {
@@ -156,6 +164,8 @@ body {
 
 /* ── Buttons + cards ─────────────────────────────────────── */
 .btn-fill {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -167,6 +177,18 @@ body {
   color: #04140d;
   transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
+.btn-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.5), transparent);
+  transform: skewX(-18deg);
+  transition: left 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-fill:hover::after { left: 130%; }
 .btn-fill:hover {
   filter: brightness(1.06);
   transform: translateY(-1px);
@@ -206,10 +228,16 @@ body {
   transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .work-row:hover::before { width: 100%; }
+.work-row {
+  transition: background 0.4s ease;
+}
+.work-row:hover {
+  background: linear-gradient(90deg, var(--accent-dim), transparent 45%);
+}
 .work-row .work-name {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
 }
-.work-row:hover .work-name { transform: translateX(10px); color: var(--g12); }
+.work-row:hover .work-name { transform: translateX(12px); color: var(--g12); }
 .work-row .work-arrow {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
   opacity: 0;
@@ -236,36 +264,50 @@ body {
   to   { transform: rotate(360deg); }
 }
 @keyframes bloom-breathe {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%      { opacity: 0.85; transform: scale(1.1); }
+  0%, 100% { opacity: 0.55; scale: 1; }
+  50%      { opacity: 0.9;  scale: 1.12; }
+}
+@keyframes drift-a {
+  0%, 100% { translate: 0 0; }
+  33%      { translate: 5vw -4vh; }
+  66%      { translate: -3vw 3vh; }
+}
+@keyframes drift-b {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: -6vw -3vh; }
+}
+@keyframes drift-c {
+  0%, 100% { translate: 0 0; }
+  40%      { translate: 4vw 4vh; }
+  80%      { translate: -5vw -2vh; }
 }
 .field-blob {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  will-change: transform, opacity;
+  will-change: scale, translate, opacity;
   mix-blend-mode: screen;
 }
 .field-blob-1 {
   width: 62vw; height: 62vw;
   left: -6vw; bottom: -26vh;
-  background: radial-gradient(closest-side, rgba(75,214,163,0.26), transparent 72%);
+  background: radial-gradient(closest-side, rgba(75,214,163,0.28), transparent 72%);
   filter: blur(46px);
-  animation: bloom-breathe 13s ease-in-out infinite;
+  animation: bloom-breathe 13s ease-in-out infinite, drift-a 34s ease-in-out infinite;
 }
 .field-blob-2 {
   width: 50vw; height: 50vw;
   right: -8vw; bottom: -34vh;
-  background: radial-gradient(closest-side, rgba(47,158,121,0.20), transparent 72%);
+  background: radial-gradient(closest-side, rgba(47,158,121,0.22), transparent 72%);
   filter: blur(60px);
-  animation: bloom-breathe 17s ease-in-out infinite reverse;
+  animation: bloom-breathe 17s ease-in-out infinite reverse, drift-b 41s ease-in-out infinite;
 }
 .field-blob-3 {
   width: 40vw; height: 40vw;
   left: 32vw; bottom: -12vh;
-  background: radial-gradient(closest-side, rgba(120,230,190,0.12), transparent 70%);
+  background: radial-gradient(closest-side, rgba(120,230,190,0.14), transparent 70%);
   filter: blur(70px);
-  animation: bloom-breathe 21s ease-in-out infinite;
+  animation: bloom-breathe 21s ease-in-out infinite, drift-c 29s ease-in-out infinite;
 }
 
 /* fine grain over everything */
