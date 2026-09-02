@@ -84,53 +84,60 @@ export default function Home() {
       </motion.nav>
 
       {/* Hero — full-bleed shader with scattered cards */}
-      <section className="relative z-10 max-w-[1240px] mx-auto px-5 min-h-[100svh] flex pt-24 pb-12">
-        <div className="w-full flex flex-col gap-4 justify-center lg:grid lg:grid-cols-12 lg:grid-rows-6 lg:gap-4">
+      <section className="relative z-10 max-w-[1080px] mx-auto px-6 min-h-[100svh] flex items-center pt-24 pb-16">
+        <div className="w-full grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
 
-          {/* Name */}
-          <div className="card-in card-cream p-6 sm:p-9 flex flex-col justify-between lg:col-start-1 lg:col-span-7 lg:row-start-1 lg:row-span-4" style={{ "--d": "0.05s" } as CSSProperties}>
-            <span className="font-label text-[10px]" style={{ color: "#4a4a3f" }}>Computer Engineer · Waterloo</span>
-            <h1
-              className="font-display mt-5"
-              style={{ fontSize: "clamp(2.6rem, 1.4rem + 5vw, 6rem)", fontWeight: 400, letterSpacing: "-0.05em", lineHeight: 0.9, color: "#0c0f0d" }}
-            >
-              <CharReveal text="Aarnav" delay={0.25} />
-              <CharReveal text="Noble" delay={0.55} />
-            </h1>
-          </div>
-
-          {/* Status */}
-          <div className="card-in card p-5 flex flex-col justify-center gap-1.5 lg:col-start-8 lg:col-span-5 lg:row-start-2 lg:row-span-1" style={{ "--d": "0.24s" } as CSSProperties}>
-            <span className="font-label text-[9px]" style={{ color: "var(--accent)" }}>open to</span>
-            <span className="text-[14px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</span>
-          </div>
-
-          {/* Tagline */}
-          <div className="card-in card-cream p-5 sm:p-6 flex items-center lg:col-start-1 lg:col-span-5 lg:row-start-5 lg:row-span-2" style={{ "--d": "0.36s" } as CSSProperties}>
-            <p className="text-[15px] sm:text-[16px]" style={{ color: "#1a1c17", lineHeight: 1.55 }}>
-              I like making things that work, and understanding the ones that don&rsquo;t.
-            </p>
-          </div>
-
-          {/* Portrait */}
-          <div className="card-in card-cream p-2 flex flex-col lg:col-start-9 lg:col-span-4 lg:row-start-3 lg:row-span-4" style={{ "--d": "0.46s" } as CSSProperties}>
-            <div className="portrait rounded-[4px] flex-1">
-              <img src="/avatar.jpeg" alt="Aarnav Noble" />
+          {/* LEFT column */}
+          <div className="flex flex-col gap-4 lg:max-w-[460px]">
+            {/* Name */}
+            <div className="card-in card-cream p-7 sm:p-8" style={{ "--d": "0.05s" } as CSSProperties}>
+              <span className="font-label text-[10px]" style={{ color: "#4a4a3f" }}>Computer Engineer · Waterloo</span>
+              <h1
+                className="font-display mt-4"
+                style={{ fontSize: "clamp(2.4rem, 1.6rem + 2.6vw, 3.7rem)", fontWeight: 400, letterSpacing: "-0.045em", lineHeight: 0.96, color: "#0c0f0d" }}
+              >
+                <CharReveal text="Aarnav" delay={0.2} />
+                <CharReveal text="Noble" delay={0.44} />
+              </h1>
             </div>
-            <div className="flex items-center justify-between px-1.5 pt-2 pb-0.5">
-              <span className="font-label text-[9px]" style={{ color: "#4a4a3f" }}>Aarnav Noble</span>
-              <span className="font-label text-[9px]" style={{ color: "#8a8a78" }}>&rsquo;26</span>
+
+            {/* Tagline */}
+            <div className="card-in card-cream p-6" style={{ "--d": "0.2s" } as CSSProperties}>
+              <p className="text-[15px]" style={{ color: "#1a1c17", lineHeight: 1.55 }}>
+                I like making things that work, and understanding the ones that don&rsquo;t.
+              </p>
+            </div>
+
+            {/* CTA */}
+            <div className="card-in card p-4" style={{ "--d": "0.32s" } as CSSProperties}>
+              <div className="flex flex-wrap items-center gap-2">
+                <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
+                <Link href="/projects" className="btn-ghost">Projects →</Link>
+              </div>
+              <div className="mt-3 flex gap-4 text-[12px]">
+                <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim">GitHub</a>
+                <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim">LinkedIn</a>
+                <button onClick={copyEmail} className="link-dim">{copied ? "Copied ✓" : "Email"}</button>
+              </div>
             </div>
           </div>
 
-          {/* CTA */}
-          <div className="card-in card p-4 flex flex-wrap items-center gap-2 lg:col-start-1 lg:col-span-4 lg:row-start-3 lg:row-span-1 lg:self-end" style={{ "--d": "0.56s" } as CSSProperties}>
-            <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
-            <Link href="/projects" className="btn-ghost">Projects →</Link>
-            <div className="w-full flex gap-4 pt-1.5 text-[12px]">
-              <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim">GitHub</a>
-              <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim">LinkedIn</a>
-              <button onClick={copyEmail} className="link-dim">{copied ? "Copied ✓" : "Email"}</button>
+          {/* RIGHT column (offset down for the stagger) */}
+          <div className="flex flex-col gap-4 lg:mt-14">
+            {/* Status */}
+            <div className="card-in card p-5" style={{ "--d": "0.14s" } as CSSProperties}>
+              <span className="font-label text-[9px]" style={{ color: "var(--accent)" }}>open to</span>
+              <div className="mt-1.5 text-[14px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</div>
+            </div>
+
+            {/* Portrait */}
+            <div className="card-in card-cream p-2" style={{ "--d": "0.26s" } as CSSProperties}>
+              <div className="portrait rounded-[3px]" style={{ aspectRatio: "4 / 5" }}>
+                <img src="/avatar.jpeg" alt="Aarnav Noble" />
+              </div>
+              <div className="px-1.5 pt-2 pb-0.5">
+                <span className="font-label text-[9px]" style={{ color: "#4a4a3f" }}>Aarnav Noble — Waterloo</span>
+              </div>
             </div>
           </div>
 
