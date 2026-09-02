@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
-import { HeroCanvas } from "@/components/HeroCanvas";
+import { MinimalBackground } from "@/components/MinimalBackground";
 import { Cursor } from "@/components/Cursor";
 import {
   Reveal,
@@ -67,13 +67,7 @@ export default function Home() {
 
   return (
     <div className="grain relative min-h-screen overflow-x-clip">
-      {/* aurora (behind) */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden" style={{ zIndex: 0 }}>
-        <div className="aurora aurora-1" style={{ top: "-14%", left: "-6%", width: "46vw", height: "46vw", background: "radial-gradient(circle, rgba(108,142,191,0.28), transparent 70%)" }} />
-        <div className="aurora aurora-2" style={{ bottom: "-18%", right: "-8%", width: "44vw", height: "44vw", background: "radial-gradient(circle, rgba(185,139,216,0.20), transparent 70%)" }} />
-      </div>
-
-      <HeroCanvas />
+      <MinimalBackground />
       <Cursor />
 
       {/* Nav */}
@@ -87,7 +81,7 @@ export default function Home() {
           className="max-w-[1180px] mx-auto my-3 px-5 h-12 flex items-center justify-between rounded-full"
           style={{ background: "rgba(13,13,13,0.55)", border: "1px solid var(--g3)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
         >
-          <Link href="/" className="font-display font-[800] text-[15px] tracking-[0.12em]" style={{ color: "var(--g12)" }}>
+          <Link href="/" className="font-display font-[600] text-[14px] tracking-[0.14em]" style={{ color: "var(--g12)" }}>
             AN
           </Link>
           <div className="flex items-center gap-6 text-[13px]">
@@ -132,8 +126,8 @@ export default function Home() {
 
             <Words
               text="I like making things that work, and understanding the ones that don't."
-              delay={0.75}
-              className="mt-7 max-w-[36ch] text-[19px] sm:text-[22px] leading-[1.55]"
+              delay={0.6}
+              className="mt-6 max-w-[34ch] text-[16px] sm:text-[19px] leading-[1.6] [color:var(--g9)]"
             />
 
             <motion.div
@@ -218,7 +212,7 @@ export default function Home() {
           {STATS.map((s, i) => (
             <Reveal key={s.label} delay={i * 0.08}>
               <div className="text-center sm:text-left">
-                <div className="font-display font-[800] text-[44px] sm:text-[64px] leading-none text-gradient">
+                <div className="font-display font-[600] text-[44px] sm:text-[60px] leading-none tracking-[-0.02em]" style={{ color: "var(--g12)" }}>
                   <CountUp to={s.n} suffix={s.suffix} />
                 </div>
                 <div className="mt-2 text-[12px] sm:text-[13px] font-mono" style={{ color: "var(--g7)" }}>
@@ -234,7 +228,7 @@ export default function Home() {
       <section className="relative z-10 max-w-[1180px] mx-auto px-6 pb-24">
         <Reveal>
           <div className="flex items-end justify-between mb-8">
-            <h2 className="font-display font-[800] text-[30px] sm:text-[40px] tracking-[-0.02em]" style={{ color: "var(--g12)" }}>
+            <h2 className="font-display font-[600] text-[26px] sm:text-[34px] tracking-[-0.02em]" style={{ color: "var(--g12)" }}>
               Selected work<span style={{ color: "var(--accent)" }}>.</span>
             </h2>
             <Link href="/projects" className="link-dim text-[13px] mb-2">All projects →</Link>
@@ -327,8 +321,8 @@ export default function Home() {
       {/* Contact */}
       <section className="relative z-10 max-w-[1180px] mx-auto px-6 pb-28">
         <Reveal>
-          <div className="rounded-3xl p-10 sm:p-16 text-center" style={{ border: "1px solid var(--g3)", background: "linear-gradient(160deg, var(--g1), rgba(108,142,191,0.06))" }}>
-            <h2 className="font-display font-[800] text-[32px] sm:text-[52px] tracking-[-0.02em] text-gradient">
+          <div className="rounded-3xl p-10 sm:p-16 text-center" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
+            <h2 className="font-display font-[600] text-[28px] sm:text-[44px] tracking-[-0.02em]" style={{ color: "var(--g12)" }}>
               Let&rsquo;s build something.
             </h2>
             <p className="mt-4 text-[15px]" style={{ color: "var(--g7)" }}>

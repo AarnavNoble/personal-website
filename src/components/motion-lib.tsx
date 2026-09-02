@@ -48,24 +48,25 @@ export function AnimatedName({ text }: { text: string }) {
   const chars = Array.from(text);
   return (
     <motion.h1
-      className="font-display font-[800] tracking-[-0.03em] leading-[0.95] text-[15vw] sm:text-[104px] lg:text-[128px]"
+      className="font-display font-[600] tracking-[-0.03em] leading-[0.98] text-[13vw] sm:text-[76px] lg:text-[96px]"
+      style={{ color: "var(--g12)" }}
       initial="hidden"
       animate="show"
-      variants={{ show: { transition: { staggerChildren: 0.038, delayChildren: 0.15 } } }}
+      variants={{ show: { transition: { staggerChildren: 0.03, delayChildren: 0.12 } } }}
       aria-label={text}
     >
       {chars.map((c, i) => (
         <motion.span
           key={i}
-          className="inline-block text-gradient"
+          className="inline-block"
           style={{ whiteSpace: c === " " ? "pre" : "normal" }}
           variants={{
-            hidden: { y: "0.9em", opacity: 0, filter: "blur(12px)" },
+            hidden: { y: "0.5em", opacity: 0, filter: "blur(6px)" },
             show: {
               y: 0,
               opacity: 1,
               filter: "blur(0px)",
-              transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+              transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
             },
           }}
         >
