@@ -85,16 +85,16 @@ export default function Home() {
 
       {/* Hero — full-bleed shader with scattered cards */}
       <section className="relative z-10 max-w-[1080px] mx-auto px-6 min-h-[100svh] flex items-center pt-24 pb-16">
-        <div className="w-full grid gap-4 lg:grid-cols-[460px_400px] lg:justify-between lg:items-start">
+        <div className="w-full grid gap-3.5 lg:grid-cols-[400px_460px] lg:justify-between lg:items-start">
 
           {/* LEFT column */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3.5">
             {/* Name */}
-            <div className="card-in card-cream p-7 sm:p-8" style={{ "--d": "0.05s" } as CSSProperties}>
+            <div className="card-in card-cream p-6 sm:p-7" style={{ "--d": "0.05s" } as CSSProperties}>
               <span className="font-label text-[10px]" style={{ color: "#4a4a3f" }}>Computer Engineer · Waterloo</span>
               <h1
-                className="font-display mt-4"
-                style={{ fontSize: "clamp(2.5rem, 1.6rem + 2.8vw, 4rem)", fontWeight: 400, letterSpacing: "-0.045em", lineHeight: 0.95, color: "#0c0f0d" }}
+                className="font-display mt-3.5"
+                style={{ fontSize: "clamp(2.25rem, 1.5rem + 2.2vw, 3.2rem)", fontWeight: 400, letterSpacing: "-0.045em", lineHeight: 0.98, color: "#0c0f0d" }}
               >
                 <CharReveal text="Aarnav" delay={0.2} />
                 <CharReveal text="Noble" delay={0.44} />
@@ -102,18 +102,18 @@ export default function Home() {
             </div>
 
             {/* Tagline */}
-            <div className="card-in card-cream p-6 sm:p-7" style={{ "--d": "0.2s" } as CSSProperties}>
-              <div className="mb-4 h-[2px] w-7" style={{ background: "var(--accent-2)" }} />
-              <p className="font-serif" style={{ fontSize: "clamp(1.2rem, 0.95rem + 1vw, 1.6rem)", lineHeight: 1.34, color: "#14170f" }}>
+            <div className="card-in card-cream p-6" style={{ "--d": "0.2s" } as CSSProperties}>
+              <div className="mb-3.5 h-[2px] w-7" style={{ background: "var(--accent-2)" }} />
+              <p className="font-serif" style={{ fontSize: "clamp(1.05rem, 0.9rem + 0.7vw, 1.3rem)", lineHeight: 1.36, color: "#14170f" }}>
                 I like making things that work, and understanding the ones that don&rsquo;t.
               </p>
             </div>
 
             {/* CTA + status */}
-            <div className="card-in card p-5" style={{ "--d": "0.32s" } as CSSProperties}>
+            <div className="card-in card p-4" style={{ "--d": "0.32s" } as CSSProperties}>
               <span className="font-label text-[9px]" style={{ color: "var(--accent)" }}>looking for</span>
-              <div className="mt-1.5 text-[14px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</div>
-              <div className="my-4 h-px" style={{ background: "var(--g4)" }} />
+              <div className="mt-1.5 text-[13px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</div>
+              <div className="my-3.5 h-px" style={{ background: "var(--g4)" }} />
               <div className="flex flex-wrap items-center gap-2">
                 <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
                 <Link href="/projects" className="btn-ghost">Projects →</Link>
@@ -127,7 +127,7 @@ export default function Home() {
           </div>
 
           {/* RIGHT column — portrait */}
-          <div className="card-in card-cream p-2.5 lg:mt-2 self-start" style={{ "--d": "0.24s" } as CSSProperties}>
+          <div className="card-in card-cream p-2.5 self-start" style={{ "--d": "0.24s" } as CSSProperties}>
             <div className="portrait rounded-[3px]">
               <img src="/avatar.jpeg" alt="Aarnav Noble" />
             </div>
