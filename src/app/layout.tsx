@@ -1,19 +1,37 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { Instrument_Serif, Julius_Sans_One, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { DotCanvas } from "@/components/DotCanvas";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
-const geist = Geist({
+const aspekta = localFont({
+  src: "../fonts/Aspekta.woff2",
   variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: "100 900",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const juliusSansOne = Julius_Sans_One({
+  variable: "--font-label",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const dmMono = DM_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -42,7 +60,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${aspekta.variable} ${instrumentSerif.variable} ${juliusSansOne.variable} ${dmMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <DotCanvas />
