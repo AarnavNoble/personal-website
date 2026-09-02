@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useState, type CSSProperties } from "react";
+import { motion } from "framer-motion";
 import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
-import { FadeUp, Reveal, CharReveal, Words, CountUp, Scramble, ScrollProgress } from "@/components/motion-lib";
-import { Backdrop } from "@/components/Backdrop";
+import { Reveal, CharReveal, Words, CountUp, Scramble, ScrollProgress } from "@/components/motion-lib";
+import { ShaderField } from "@/components/ShaderField";
 
 const SKILLS = [
   "Python", "Go", "TypeScript", "C / C++", "React", "Next.js", "FastAPI",
@@ -28,13 +28,6 @@ const INTERESTS = ["photography", "film", "soccer", "MMA", "tennis", "travel"];
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const portraitY = useTransform(scrollYProgress, [0, 1], [0, -90]);
 
   function copyEmail() {
     navigator.clipboard.writeText(LINKS.email).then(() => {
@@ -58,7 +51,7 @@ export default function Home() {
   return (
     <div className="grain relative min-h-screen overflow-x-clip">
       <ScrollProgress />
-      <Backdrop />
+      <ShaderField />
 
       {/* Nav */}
       <motion.nav
@@ -67,11 +60,14 @@ export default function Home() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-0 left-0 right-0 z-40"
       >
-        <div className="max-w-[1160px] mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="font-label text-[13px]" style={{ color: "var(--g12)", letterSpacing: "0.22em" }}>
+        <div
+          className="max-w-[1160px] mx-auto mt-3 px-4 h-11 rounded-full flex items-center justify-between"
+          style={{ background: "rgba(10,12,10,0.42)", border: "1px solid var(--g3)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
+        >
+          <Link href="/" className="font-label text-[13px] pl-2" style={{ color: "var(--g12)", letterSpacing: "0.22em" }}>
             AN
           </Link>
-          <div className="flex items-center gap-7 text-[13px]">
+          <div className="flex items-center gap-6 text-[13px] pr-1">
             <Link href="/work" className="link-dim">Work</Link>
             <Link href="/projects" className="link-dim">Projects</Link>
             <a href={LINKS.resume} target="_blank" rel="noopener" className="link-dim hidden sm:inline">Résumé</a>
@@ -87,77 +83,58 @@ export default function Home() {
         </div>
       </motion.nav>
 
-      {/* Hero */}
-      <section
-        ref={heroRef}
-        className="relative z-10 max-w-[1160px] mx-auto px-6 min-h-[100svh] flex flex-col justify-center pt-24 pb-20"
-      >
-        <div className="grid lg:grid-cols-[1fr_320px] gap-14 lg:gap-10 items-center">
-          <div>
-            <FadeUp delay={0.05}>
-              <span className="font-label inline-flex items-center gap-2.5 text-[11px]" style={{ color: "var(--g8)" }}>
-                <span className="inline-block h-[6px] w-[6px] rounded-full" style={{ background: "var(--accent)" }} />
-                Waterloo, ON — back on campus
-              </span>
-            </FadeUp>
+      {/* Hero — full-bleed shader with scattered cards */}
+      <section className="relative z-10 max-w-[1240px] mx-auto px-5 min-h-[100svh] flex pt-24 pb-12">
+        <div className="w-full flex flex-col gap-4 justify-center lg:grid lg:grid-cols-12 lg:grid-rows-6 lg:gap-4">
 
+          {/* Name */}
+          <div className="card-in card-cream p-6 sm:p-9 flex flex-col justify-between lg:col-start-1 lg:col-span-7 lg:row-start-1 lg:row-span-4" style={{ "--d": "0.05s" } as CSSProperties}>
+            <span className="font-label text-[10px]" style={{ color: "#4a4a3f" }}>Computer Engineer · Waterloo</span>
             <h1
-              className="font-display mt-6"
-              style={{ fontSize: "var(--fs-hero)", fontWeight: 400, letterSpacing: "-0.05em", lineHeight: 0.92, color: "var(--g12)" }}
+              className="font-display mt-5"
+              style={{ fontSize: "clamp(2.6rem, 1.4rem + 5vw, 6rem)", fontWeight: 400, letterSpacing: "-0.05em", lineHeight: 0.9, color: "#0c0f0d" }}
             >
-              <CharReveal text="Aarnav" delay={0.15} />
-              <CharReveal text="Noble" delay={0.42} />
+              <CharReveal text="Aarnav" delay={0.25} />
+              <CharReveal text="Noble" delay={0.55} />
             </h1>
+          </div>
 
-            <FadeUp delay={0.5}>
-              <p className="mt-8 max-w-[42ch] text-[17px] sm:text-[19px]" style={{ color: "var(--g9)", lineHeight: 1.6 }}>
-                I like making things that work, and understanding the ones that don&rsquo;t.
-              </p>
-            </FadeUp>
+          {/* Status */}
+          <div className="card-in card p-5 flex flex-col justify-center gap-1.5 lg:col-start-8 lg:col-span-5 lg:row-start-2 lg:row-span-1" style={{ "--d": "0.24s" } as CSSProperties}>
+            <span className="font-label text-[9px]" style={{ color: "var(--accent)" }}>open to</span>
+            <span className="text-[14px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</span>
+          </div>
 
-            <FadeUp delay={0.62}>
-              <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-3">
-                <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
-                <Link href="/projects" className="btn-ghost">See projects →</Link>
-                <span className="mx-1 hidden sm:inline" style={{ color: "var(--g5)" }}>·</span>
-                <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim text-[13px]">GitHub</a>
-                <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim text-[13px]">LinkedIn</a>
-                <button onClick={copyEmail} className="link-dim text-[13px]">{copied ? "Copied ✓" : "Email"}</button>
-              </div>
-            </FadeUp>
+          {/* Tagline */}
+          <div className="card-in card-cream p-5 sm:p-6 flex items-center lg:col-start-1 lg:col-span-5 lg:row-start-5 lg:row-span-2" style={{ "--d": "0.36s" } as CSSProperties}>
+            <p className="text-[15px] sm:text-[16px]" style={{ color: "#1a1c17", lineHeight: 1.55 }}>
+              I like making things that work, and understanding the ones that don&rsquo;t.
+            </p>
           </div>
 
           {/* Portrait */}
-          <motion.div
-            style={{ y: portraitY }}
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.55, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="justify-self-center lg:justify-self-end w-[210px] lg:w-[320px]"
-          >
-            <div className="portrait-float">
-              <div className="portrait group relative overflow-hidden rounded-[20px]" style={{ border: "1px solid var(--g4)", boxShadow: "0 40px 90px -30px rgba(0,0,0,0.8)" }}>
-                <img src="/avatar.jpeg" alt="Aarnav Noble" className="block w-full" style={{ background: "var(--g1)" }} />
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{ background: "linear-gradient(180deg, transparent 55%, rgba(8,10,9,0.5))" }}
-                />
-              </div>
+          <div className="card-in card-cream p-2 flex flex-col lg:col-start-9 lg:col-span-4 lg:row-start-3 lg:row-span-4" style={{ "--d": "0.46s" } as CSSProperties}>
+            <div className="portrait rounded-[4px] flex-1">
+              <img src="/avatar.jpeg" alt="Aarnav Noble" />
             </div>
-          </motion.div>
-        </div>
+            <div className="flex items-center justify-between px-1.5 pt-2 pb-0.5">
+              <span className="font-label text-[9px]" style={{ color: "#4a4a3f" }}>Aarnav Noble</span>
+              <span className="font-label text-[9px]" style={{ color: "#8a8a78" }}>&rsquo;26</span>
+            </div>
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        >
-          <span className="font-label text-[9px]" style={{ color: "var(--g6)" }}>scroll</span>
-          <span className="relative block w-[17px] h-[26px] rounded-full" style={{ border: "1px solid var(--g5)" }}>
-            <span className="scrollcue-dot absolute left-1/2 top-1.5 -translate-x-1/2 w-1 h-1 rounded-full" style={{ background: "var(--g7)" }} />
-          </span>
-        </motion.div>
+          {/* CTA */}
+          <div className="card-in card p-4 flex flex-wrap items-center gap-2 lg:col-start-1 lg:col-span-4 lg:row-start-3 lg:row-span-1 lg:self-end" style={{ "--d": "0.56s" } as CSSProperties}>
+            <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
+            <Link href="/projects" className="btn-ghost">Projects →</Link>
+            <div className="w-full flex gap-4 pt-1.5 text-[12px]">
+              <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim">GitHub</a>
+              <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim">LinkedIn</a>
+              <button onClick={copyEmail} className="link-dim">{copied ? "Copied ✓" : "Email"}</button>
+            </div>
+          </div>
+
+        </div>
       </section>
 
       {/* Skills marquee */}
