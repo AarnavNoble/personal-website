@@ -44,6 +44,7 @@ export default function Home() {
       if (e.target instanceof HTMLInputElement || e.metaKey || e.ctrlKey) return;
       if (e.key === "g") window.open(LINKS.github, "_blank");
       if (e.key === "l") window.open(LINKS.linkedin, "_blank");
+      if (e.key === "r") window.open(LINKS.resume, "_blank");
       if (e.key === "e") copyEmail();
     }
     window.addEventListener("keydown", onKey);
@@ -74,6 +75,7 @@ export default function Home() {
           <div className="flex items-center gap-7">
             <Link href="/work"     className="link-dim text-[14px]">Work</Link>
             <Link href="/projects" className="link-dim text-[14px]">Projects</Link>
+            <a href={LINKS.resume} target="_blank" rel="noopener" className="link-dim text-[14px]">Résumé</a>
             <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim text-[14px]">GitHub</a>
             <kbd
               className="hidden sm:flex items-center gap-1 text-[11px] font-mono px-2 py-1 rounded cursor-pointer transition-colors"
@@ -127,6 +129,7 @@ export default function Home() {
               <Link href="/work"     className="link font-medium">Work →</Link>
               <Link href="/projects" className="link font-medium">Projects →</Link>
               <span style={{ color: "var(--g4)" }}>·</span>
+              <a href={LINKS.resume}   target="_blank" rel="noopener" className="link-dim">Résumé ↗</a>
               <a href={LINKS.github}   target="_blank" rel="noopener" className="link-dim">GitHub ↗</a>
               <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim">LinkedIn ↗</a>
               <button onClick={copyEmail} className="link-dim">{copied ? "Copied ✓" : "Email"}</button>
@@ -276,6 +279,7 @@ export default function Home() {
           <div>
             <p className="text-[11px] font-mono uppercase tracking-[0.12em] mb-5" style={{ color: "var(--g5)" }}>Contact</p>
             <div className="space-y-2 text-[14px]">
+              <div><a href={LINKS.resume}   target="_blank" rel="noopener" className="link-dim">Résumé ↗</a></div>
               <div><a href={LINKS.github}   target="_blank" rel="noopener" className="link-dim">GitHub ↗</a></div>
               <div><a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim">LinkedIn ↗</a></div>
               <div><button onClick={copyEmail} className="link-dim">{copied ? "Copied ✓" : LINKS.email}</button></div>
@@ -287,7 +291,7 @@ export default function Home() {
 
       <footer className="max-w-[1200px] mx-auto px-10 pb-10 w-full" style={{ position: "relative", zIndex: 2 }}>
         <p className="text-[11px] font-mono" style={{ color: "var(--g5)" }}>
-          g · l · e · GitHub · LinkedIn · Email
+          g · l · r · e · GitHub · LinkedIn · Résumé · Email
         </p>
       </footer>
     </div>

@@ -24,6 +24,7 @@ export function CommandPalette() {
     { group: "Navigate", id: "home",     label: "Home",         action: () => { router.push("/");          setOpen(false); } },
     { group: "Navigate", id: "work",     label: "Work",         action: () => { router.push("/work");      setOpen(false); } },
     { group: "Navigate", id: "projects", label: "Projects",     action: () => { router.push("/projects");  setOpen(false); } },
+    { group: "Connect",  id: "resume",   label: "Résumé",       hint: "R", action: () => { window.open("/AarnavNoble-Resume.pdf", "_blank"); setOpen(false); } },
     { group: "Connect",  id: "github",   label: "GitHub",       hint: "G", action: () => { window.open("https://github.com/AarnavNoble", "_blank"); setOpen(false); } },
     { group: "Connect",  id: "linkedin", label: "LinkedIn",     hint: "L", action: () => { window.open("https://linkedin.com/in/aarnav-noble", "_blank"); setOpen(false); } },
     { group: "Connect",  id: "email",    label: copied ? "Copied ✓" : "Copy email", hint: "E", action: copyEmail },

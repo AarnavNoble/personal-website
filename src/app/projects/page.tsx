@@ -58,6 +58,7 @@ export default function Projects() {
           <Link href="/" className="link-dim text-[13px]">← Aarnav Noble</Link>
           <div className="flex items-center gap-5">
             <Link href="/work" className="link-dim text-[13px]">Work</Link>
+            <a href={LINKS.resume} target="_blank" rel="noopener" className="link-dim text-[13px]">Résumé</a>
             <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim text-[13px]">GitHub</a>
           </div>
         </div>
@@ -99,12 +100,14 @@ export default function Projects() {
                   <div className="flex items-center gap-4 shrink-0">
                     {project.demo && (
                       <a href={project.demo} target="_blank" rel="noopener" className="link-dim text-[12px]">
-                        Demo ↗
+                        {project.github ? "Demo ↗" : "Site ↗"}
                       </a>
                     )}
-                    <a href={project.github} target="_blank" rel="noopener" className="link-dim text-[12px]">
-                      GitHub ↗
-                    </a>
+                    {project.github && (
+                      <a href={project.github} target="_blank" rel="noopener" className="link-dim text-[12px]">
+                        GitHub ↗
+                      </a>
+                    )}
                   </div>
                 </div>
 

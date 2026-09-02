@@ -2,12 +2,13 @@ export const LINKS = {
   github: "https://github.com/AarnavNoble",
   linkedin: "https://linkedin.com/in/aarnav-noble",
   email: "aarnavnoble14@gmail.com",
+  resume: "/AarnavNoble-Resume.pdf",
 };
 
 export const EXPERIENCE = [
   {
     company: "AethexAI",
-    detail: "Formerly a stealth voice AI startup · London, UK",
+    detail: "Voice AI infrastructure · London, UK",
     role: "Member of Technical Staff Intern",
     period: "Jan 2026 – Apr 2026",
     bullets: [
@@ -182,8 +183,8 @@ export const PROJECTS = [
     tagline: "Observability and eval platform for production AI agents: replays real failures as deterministic CI tests, at zero model API cost.",
     description:
       "Production AI agents fail in ways unit tests don't catch: a prompt edit changes tone, a tool call returns something unexpected, and nobody notices until a customer does. Vestige instruments every LLM call, tool call, and transitive HTTP request in an agent run via OpenTelemetry, then lets you promote any recorded run into a regression test. Replay reconstructs that failure from content-hashed fixtures instead of live model calls, so a full test suite re-run costs nothing and never touches a real provider. A GitHub Actions gate runs this on every pull request and blocks the merge on regression.",
-    github: "https://github.com/vestigeapp/vestige-product",
-    demo: null,
+    github: null,
+    demo: "https://vestigeapp.vercel.app/",
     stack: ["Python", "Go", "TypeScript", "Next.js", "OpenTelemetry", "ClickHouse"],
     pipeline: [
       {
