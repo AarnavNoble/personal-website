@@ -21,7 +21,7 @@ const STATS = [
 
 const NOW = [
   { label: "studying", value: "Computer Engineering · University of Waterloo" },
-  { label: "open to", value: "SWE / ML-infra co-op · Winter 2027" },
+  { label: "looking for", value: "SWE / ML-infra co-op · Winter 2027" },
 ];
 
 const INTERESTS = ["photography", "film", "soccer", "MMA", "tennis", "travel"];
@@ -85,16 +85,16 @@ export default function Home() {
 
       {/* Hero — full-bleed shader with scattered cards */}
       <section className="relative z-10 max-w-[1080px] mx-auto px-6 min-h-[100svh] flex items-center pt-24 pb-16">
-        <div className="w-full grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+        <div className="w-full grid gap-4 lg:grid-cols-[460px_400px] lg:justify-between lg:items-start">
 
           {/* LEFT column */}
-          <div className="flex flex-col gap-4 lg:max-w-[460px]">
+          <div className="flex flex-col gap-4">
             {/* Name */}
             <div className="card-in card-cream p-7 sm:p-8" style={{ "--d": "0.05s" } as CSSProperties}>
               <span className="font-label text-[10px]" style={{ color: "#4a4a3f" }}>Computer Engineer · Waterloo</span>
               <h1
                 className="font-display mt-4"
-                style={{ fontSize: "clamp(2.4rem, 1.6rem + 2.6vw, 3.7rem)", fontWeight: 400, letterSpacing: "-0.045em", lineHeight: 0.96, color: "#0c0f0d" }}
+                style={{ fontSize: "clamp(2.5rem, 1.6rem + 2.8vw, 4rem)", fontWeight: 400, letterSpacing: "-0.045em", lineHeight: 0.95, color: "#0c0f0d" }}
               >
                 <CharReveal text="Aarnav" delay={0.2} />
                 <CharReveal text="Noble" delay={0.44} />
@@ -108,8 +108,11 @@ export default function Home() {
               </p>
             </div>
 
-            {/* CTA */}
-            <div className="card-in card p-4" style={{ "--d": "0.32s" } as CSSProperties}>
+            {/* CTA + status */}
+            <div className="card-in card p-5" style={{ "--d": "0.32s" } as CSSProperties}>
+              <span className="font-label text-[9px]" style={{ color: "var(--accent)" }}>looking for</span>
+              <div className="mt-1.5 text-[14px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</div>
+              <div className="my-4 h-px" style={{ background: "var(--g4)" }} />
               <div className="flex flex-wrap items-center gap-2">
                 <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
                 <Link href="/projects" className="btn-ghost">Projects →</Link>
@@ -122,22 +125,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* RIGHT column (offset down for the stagger) */}
-          <div className="flex flex-col gap-4 lg:mt-14">
-            {/* Status */}
-            <div className="card-in card p-5" style={{ "--d": "0.14s" } as CSSProperties}>
-              <span className="font-label text-[9px]" style={{ color: "var(--accent)" }}>open to</span>
-              <div className="mt-1.5 text-[14px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</div>
+          {/* RIGHT column — portrait */}
+          <div className="card-in card-cream p-2.5 lg:mt-2" style={{ "--d": "0.24s" } as CSSProperties}>
+            <div className="portrait rounded-[3px]" style={{ aspectRatio: "3 / 4" }}>
+              <img src="/avatar.jpeg" alt="Aarnav Noble" />
             </div>
-
-            {/* Portrait */}
-            <div className="card-in card-cream p-2" style={{ "--d": "0.26s" } as CSSProperties}>
-              <div className="portrait rounded-[3px]" style={{ aspectRatio: "4 / 5" }}>
-                <img src="/avatar.jpeg" alt="Aarnav Noble" />
-              </div>
-              <div className="px-1.5 pt-2 pb-0.5">
-                <span className="font-label text-[9px]" style={{ color: "#4a4a3f" }}>Aarnav Noble — Waterloo</span>
-              </div>
+            <div className="px-1.5 pt-2.5 pb-1">
+              <span className="font-label text-[9px]" style={{ color: "#4a4a3f" }}>Aarnav Noble — Waterloo</span>
             </div>
           </div>
 
@@ -230,7 +224,7 @@ export default function Home() {
             </div>
             {NOW.map((item) => (
               <div key={item.label} className="flex items-baseline gap-5 px-6 py-4" style={{ borderTop: "1px solid var(--g2)" }}>
-                <span className="font-label text-[9px] w-14 shrink-0" style={{ color: "var(--accent)" }}>{item.label}</span>
+                <span className="font-label text-[9px] w-24 shrink-0" style={{ color: "var(--accent)" }}>{item.label}</span>
                 <span className="text-[14px]" style={{ color: "var(--g10)" }}>{item.value}</span>
               </div>
             ))}
