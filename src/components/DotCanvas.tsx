@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 const GAP = 22;
 const BASE_R = 0.85;
@@ -9,8 +10,10 @@ const REACH = 90;
 
 export function DotCanvas() {
   const ref = useRef<HTMLCanvasElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname === "/") return;
     const canvas = ref.current!;
     const ctx = canvas.getContext("2d")!;
     let mx = -2000, my = -2000;
@@ -58,7 +61,9 @@ export function DotCanvas() {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [pathname]);
+
+  if (pathname === "/") return null;
 
   return (
     <canvas
