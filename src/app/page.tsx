@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
-import { FadeUp, Reveal } from "@/components/motion-lib";
+import { FadeUp, Reveal, LineReveal } from "@/components/motion-lib";
+import { Backdrop } from "@/components/Backdrop";
 
 const SKILLS = [
   "Python", "Go", "TypeScript", "C / C++", "React", "Next.js", "FastAPI",
@@ -27,6 +28,13 @@ const INTERESTS = ["photography", "film", "soccer", "MMA", "tennis", "travel"];
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const portraitY = useTransform(scrollYProgress, [0, 1], [0, -90]);
 
   function copyEmail() {
     navigator.clipboard.writeText(LINKS.email).then(() => {
@@ -49,7 +57,7 @@ export default function Home() {
 
   return (
     <div className="grain relative min-h-screen overflow-x-clip">
-      <div className="herobloom-far" aria-hidden />
+      <Backdrop />
 
       {/* Nav */}
       <motion.nav
@@ -79,71 +87,69 @@ export default function Home() {
       </motion.nav>
 
       {/* Hero */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 min-h-[100svh] flex flex-col justify-center pt-24 pb-20">
-        <div className="herobloom" aria-hidden />
+      <section
+        ref={heroRef}
+        className="relative z-10 max-w-[1160px] mx-auto px-6 min-h-[100svh] flex flex-col justify-center pt-24 pb-20"
+      >
+        <div className="grid lg:grid-cols-[1fr_320px] gap-14 lg:gap-10 items-center">
+          <div>
+            <FadeUp delay={0.05}>
+              <span className="font-label inline-flex items-center gap-2.5 text-[11px]" style={{ color: "var(--g8)" }}>
+                <span className="inline-block h-[6px] w-[6px] rounded-full" style={{ background: "var(--accent)" }} />
+                Waterloo, ON — back on campus
+              </span>
+            </FadeUp>
 
-        <div className="relative">
-          <FadeUp delay={0.05}>
-            <span
-              className="font-label inline-flex items-center gap-2.5 text-[11px]"
-              style={{ color: "var(--g8)" }}
-            >
-              <span className="inline-block h-[6px] w-[6px] rounded-full" style={{ background: "var(--accent)" }} />
-              Waterloo, ON — back on campus
-            </span>
-          </FadeUp>
-
-          <FadeUp delay={0.12}>
             <h1
               className="font-display mt-6"
-              style={{
-                fontSize: "var(--fs-hero)",
-                fontWeight: 400,
-                letterSpacing: "-0.05em",
-                lineHeight: 0.92,
-                color: "var(--g12)",
-              }}
+              style={{ fontSize: "var(--fs-hero)", fontWeight: 400, letterSpacing: "-0.05em", lineHeight: 0.92, color: "var(--g12)" }}
             >
-              Aarnav
-              <br />
-              Noble
+              <LineReveal immediate delay={0.15}>Aarnav</LineReveal>
+              <LineReveal immediate delay={0.28}>Noble</LineReveal>
             </h1>
-          </FadeUp>
 
-          <FadeUp delay={0.24}>
-            <p
-              className="mt-8 max-w-[42ch] text-[17px] sm:text-[19px]"
-              style={{ color: "var(--g9)", lineHeight: 1.6, fontWeight: 400 }}
-            >
-              I like making things that work, and understanding the ones that don&rsquo;t.
-            </p>
-          </FadeUp>
+            <FadeUp delay={0.5}>
+              <p className="mt-8 max-w-[42ch] text-[17px] sm:text-[19px]" style={{ color: "var(--g9)", lineHeight: 1.6 }}>
+                I like making things that work, and understanding the ones that don&rsquo;t.
+              </p>
+            </FadeUp>
 
-          <FadeUp delay={0.34}>
-            <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-3">
-              <a
-                href={LINKS.resume}
-                target="_blank"
-                rel="noopener"
-                className="btn-fill"
-              >
-                Résumé ↗
-              </a>
-              <Link href="/projects" className="btn-ghost">
-                See projects →
-              </Link>
-              <span className="mx-1 hidden sm:inline" style={{ color: "var(--g5)" }}>·</span>
-              <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim text-[13px]">GitHub</a>
-              <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim text-[13px]">LinkedIn</a>
-              <button onClick={copyEmail} className="link-dim text-[13px]">{copied ? "Copied ✓" : "Email"}</button>
+            <FadeUp delay={0.62}>
+              <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-3">
+                <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
+                <Link href="/projects" className="btn-ghost">See projects →</Link>
+                <span className="mx-1 hidden sm:inline" style={{ color: "var(--g5)" }}>·</span>
+                <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim text-[13px]">GitHub</a>
+                <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim text-[13px]">LinkedIn</a>
+                <button onClick={copyEmail} className="link-dim text-[13px]">{copied ? "Copied ✓" : "Email"}</button>
+              </div>
+            </FadeUp>
+          </div>
+
+          {/* Portrait */}
+          <motion.div
+            style={{ y: portraitY }}
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.55, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="justify-self-center lg:justify-self-end w-[210px] lg:w-[320px]"
+          >
+            <div className="portrait-float">
+              <div className="portrait group relative overflow-hidden rounded-[20px]" style={{ border: "1px solid var(--g4)", boxShadow: "0 40px 90px -30px rgba(0,0,0,0.8)" }}>
+                <img src="/avatar.jpeg" alt="Aarnav Noble" className="block w-full" style={{ background: "var(--g1)" }} />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{ background: "linear-gradient(180deg, transparent 55%, rgba(8,10,9,0.5))" }}
+                />
+              </div>
             </div>
-          </FadeUp>
+          </motion.div>
         </div>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.8 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
           <span className="font-label text-[9px]" style={{ color: "var(--g6)" }}>scroll</span>
@@ -173,58 +179,53 @@ export default function Home() {
       <section className="relative z-10 max-w-[1160px] mx-auto px-6 py-24">
         <div className="grid grid-cols-3 gap-6">
           {STATS.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.08}>
+            <Reveal key={s.label} delay={i * 0.1}>
               <div>
                 <div
                   className="font-serif leading-none"
-                  style={{ fontSize: "clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem)", color: "var(--g12)", fontWeight: 400 }}
+                  style={{ fontSize: "clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem)", color: "var(--g12)" }}
                 >
                   {s.n}
                 </div>
-                <div className="font-label mt-3 text-[10px]" style={{ color: "var(--g7)" }}>
-                  {s.label}
-                </div>
+                <div className="font-label mt-3 text-[10px]" style={{ color: "var(--g7)" }}>{s.label}</div>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Selected work */}
+      {/* Selected work — editorial index */}
       <section className="relative z-10 max-w-[1160px] mx-auto px-6 pb-24">
         <Reveal>
-          <div className="flex items-end justify-between mb-9">
-            <h2
-              className="font-display"
-              style={{ fontSize: "clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}
-            >
+          <div className="flex items-end justify-between mb-6">
+            <h2 className="font-display" style={{ fontSize: "clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
               Selected work
             </h2>
             <Link href="/projects" className="link-dim text-[13px] mb-1.5">All projects →</Link>
           </div>
         </Reveal>
 
-        <div className="grid sm:grid-cols-2 gap-px" style={{ background: "var(--g3)", border: "1px solid var(--g3)", borderRadius: 16, overflow: "hidden" }}>
+        <div className="work-index">
           {PROJECTS.map((p, i) => (
-            <Reveal key={p.slug} delay={(i % 2) * 0.07}>
-              <Link href="/projects" className="proj-card group block h-full p-7">
-                <div className="flex items-start justify-between">
-                  <span className="font-label text-[10px]" style={{ color: "var(--g6)" }}>0{i + 1}</span>
-                  <span className="text-[14px] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style={{ color: "var(--g8)" }}>↗</span>
+            <Reveal key={p.slug} delay={i * 0.06}>
+              <Link href="/projects" className="work-row group">
+                <div className="flex items-baseline gap-4 sm:gap-6">
+                  <span className="font-label text-[10px] shrink-0 w-6" style={{ color: "var(--g6)" }}>0{i + 1}</span>
+                  <h3
+                    className="work-name font-display"
+                    style={{ fontSize: "clamp(1.7rem, 1.1rem + 2.6vw, 3rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g10)", lineHeight: 1 }}
+                  >
+                    {p.name}
+                  </h3>
+                  <span className="work-arrow ml-auto text-[20px] shrink-0" style={{ color: "var(--accent)" }}>↗</span>
                 </div>
-                <h3 className="font-display mt-5 text-[20px]" style={{ fontWeight: 400, letterSpacing: "-0.02em", color: "var(--g12)" }}>
-                  {p.name}
-                </h3>
-                <p className="mt-2.5 text-[13px]" style={{ color: "var(--g8)", lineHeight: 1.65 }}>
-                  {p.tagline}
-                </p>
-                <div className="mt-5 flex flex-wrap gap-1.5">
-                  {p.stack.slice(0, 4).map((t) => (
-                    <span key={t} className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ color: "var(--g7)", border: "1px solid var(--g4)" }}>{t}</span>
-                  ))}
-                  {p.stack.length > 4 && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5" style={{ color: "var(--g6)" }}>+{p.stack.length - 4}</span>
-                  )}
+                <div className="work-meta pl-[calc(1.5rem+1rem)] sm:pl-[calc(1.5rem+1.5rem)]">
+                  <p className="max-w-[62ch] text-[13px]" style={{ color: "var(--g8)", lineHeight: 1.65 }}>{p.tagline}</p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {p.stack.slice(0, 5).map((t) => (
+                      <span key={t} className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ color: "var(--g7)", border: "1px solid var(--g4)" }}>{t}</span>
+                    ))}
+                  </div>
                 </div>
               </Link>
             </Reveal>
@@ -272,17 +273,15 @@ export default function Home() {
       {/* Contact */}
       <section className="relative z-10 max-w-[1160px] mx-auto px-6 pb-28">
         <Reveal>
-          <div className="rounded-3xl p-10 sm:p-16 text-center" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
-            <h2
-              className="font-display"
-              style={{ fontSize: "clamp(1.9rem, 1.3rem + 2.6vw, 3.25rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}
-            >
+          <div className="relative rounded-3xl p-10 sm:p-16 text-center overflow-hidden" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
+            <div className="pointer-events-none absolute inset-x-0 bottom-[-60%] h-[120%]" style={{ background: "radial-gradient(closest-side, var(--accent-dim), transparent 70%)" }} />
+            <h2 className="relative font-display" style={{ fontSize: "clamp(1.9rem, 1.3rem + 2.6vw, 3.25rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
               Let&rsquo;s build something.
             </h2>
-            <p className="mt-4 text-[15px]" style={{ color: "var(--g8)" }}>
+            <p className="relative mt-4 text-[15px]" style={{ color: "var(--g8)" }}>
               Open to co-op roles and interesting problems. Fastest way to reach me:
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <div className="relative mt-8 flex flex-wrap justify-center gap-3">
               <button onClick={copyEmail} className="btn-fill">{copied ? "Copied ✓" : LINKS.email}</button>
               <a href={LINKS.linkedin} target="_blank" rel="noopener" className="btn-ghost">LinkedIn ↗</a>
               <a href={LINKS.github} target="_blank" rel="noopener" className="btn-ghost">GitHub ↗</a>

@@ -59,3 +59,36 @@ export function Reveal({
     </motion.div>
   );
 }
+
+/* ── LineReveal: clip-path wipe (for big headings) ───────── */
+export function LineReveal({
+  children,
+  delay = 0,
+  immediate = false,
+  className,
+  style,
+}: {
+  children: ReactNode;
+  delay?: number;
+  immediate?: boolean;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  const hidden = { clipPath: "inset(0 0 108% 0)", y: "0.35em" };
+  const shown = { clipPath: "inset(0 0 -8% 0)", y: 0 };
+  const anim = { duration: 0.85, delay, ease: EASE };
+
+  return (
+    <motion.div
+      className={className}
+      style={style}
+      initial={hidden}
+      {...(immediate
+        ? { animate: shown }
+        : { whileInView: shown, viewport: { once: true, margin: "0px 0px -40px 0px" } })}
+      transition={anim}
+    >
+      {children}
+    </motion.div>
+  );
+}

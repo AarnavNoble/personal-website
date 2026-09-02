@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
-/* ── Palette (warm dark) ─────────────────────────────────── */
+/* ── Palette (deep green, cool dark) ─────────────────────── */
 :root {
-  --bg: #0c0b08;
-  --fg: #ebe4d6;
-  --g1: #141209;
-  --g2: #1b1810;
-  --g3: #262115;
-  --g4: #322c1e;
-  --g5: #423b29;
-  --g6: #574e37;
-  --g7: #776b4f;
-  --g8: #978a69;
-  --g9: #b3a684;
-  --g10: #cabd9c;
-  --g11: #ddd1b6;
-  --g12: #f0e7d5;
-  --accent: #e2894e;
-  --accent-2: #b89a4a;
-  --accent-dim: rgba(226,137,78,0.10);
-  --accent-border: rgba(226,137,78,0.28);
+  --bg: #080a09;
+  --fg: #e7e9e5;
+  --g1: #0d100e;
+  --g2: #141714;
+  --g3: #1c211d;
+  --g4: #262c27;
+  --g5: #333a34;
+  --g6: #454e46;
+  --g7: #626b62;
+  --g8: #808a80;
+  --g9: #9ea79d;
+  --g10: #bfc6bd;
+  --g11: #d8ddd6;
+  --g12: #eef1ec;
+  --accent: #4bd6a3;
+  --accent-2: #2f9e79;
+  --accent-dim: rgba(75,214,163,0.10);
+  --accent-border: rgba(75,214,163,0.28);
   --fs-hero: clamp(3.25rem, 2.1rem + 5.1vw, 7rem);
 }
 
@@ -164,10 +164,14 @@ body {
   font-size: 13px;
   font-weight: 500;
   background: var(--accent);
-  color: #17130c;
-  transition: filter 0.18s ease, transform 0.18s ease;
+  color: #04140d;
+  transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
-.btn-fill:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-fill:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px -8px var(--accent-border);
+}
 
 .btn-ghost {
   display: inline-flex;
@@ -181,54 +185,87 @@ body {
   border: 1px solid var(--g4);
   transition: border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
-.btn-ghost:hover { border-color: var(--g6); color: var(--g12); transform: translateY(-1px); }
+.btn-ghost:hover { border-color: var(--accent-border); color: var(--g12); transform: translateY(-1px); }
 
-.proj-card {
-  background: var(--g1);
-  transition: background 0.2s ease;
+/* ── Editorial work index ────────────────────────────────── */
+.work-index { border-bottom: 1px solid var(--g3); }
+.work-row {
+  position: relative;
+  display: block;
+  padding: 1.9rem 0;
+  border-top: 1px solid var(--g3);
 }
-.proj-card:hover { background: var(--g2); }
+.work-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  height: 1px;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.work-row:hover::before { width: 100%; }
+.work-row .work-name {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+.work-row:hover .work-name { transform: translateX(10px); color: var(--g12); }
+.work-row .work-arrow {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0;
+}
+.work-row:hover .work-arrow { opacity: 1; transform: translate(4px, -4px); }
+.work-row .work-meta {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin 0.4s ease;
+}
+.work-row:hover .work-meta,
+.work-row:focus-within .work-meta {
+  max-height: 140px;
+  opacity: 1;
+  margin-top: 0.9rem;
+}
 
 /* ── Redesign utilities ──────────────────────────────────── */
 
-/* warm bloom anchored to the bottom of the hero, slow breathing */
+/* slow organic colour field behind the hero (rotated in a component) */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 @keyframes bloom-breathe {
-  0%, 100% { opacity: 0.72; transform: translateX(-50%) scale(1); }
-  50%      { opacity: 0.92; transform: translateX(-50%) scale(1.08); }
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 0.85; transform: scale(1.1); }
 }
-.herobloom {
+.field-blob {
   position: absolute;
-  left: 50%;
-  bottom: -30vh;
-  width: 150vw;
-  max-width: 1500px;
-  height: 90vh;
-  z-index: 0;
-  pointer-events: none;
   border-radius: 50%;
-  background: radial-gradient(
-    closest-side,
-    rgba(226,137,78,0.30) 0%,
-    rgba(226,137,78,0.14) 34%,
-    rgba(184,154,74,0.06) 60%,
-    transparent 80%
-  );
-  filter: blur(30px);
-  animation: bloom-breathe 14s ease-in-out infinite;
-  will-change: opacity, transform;
+  pointer-events: none;
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
 }
-.herobloom-far {
-  position: fixed;
-  left: 50%;
-  bottom: -55vh;
-  width: 140vw;
-  height: 110vh;
-  z-index: 0;
-  pointer-events: none;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(226,137,78,0.06), transparent 72%);
+.field-blob-1 {
+  width: 62vw; height: 62vw;
+  left: -6vw; bottom: -26vh;
+  background: radial-gradient(closest-side, rgba(75,214,163,0.26), transparent 72%);
+  filter: blur(46px);
+  animation: bloom-breathe 13s ease-in-out infinite;
+}
+.field-blob-2 {
+  width: 50vw; height: 50vw;
+  right: -8vw; bottom: -34vh;
+  background: radial-gradient(closest-side, rgba(47,158,121,0.20), transparent 72%);
   filter: blur(60px);
+  animation: bloom-breathe 17s ease-in-out infinite reverse;
+}
+.field-blob-3 {
+  width: 40vw; height: 40vw;
+  left: 32vw; bottom: -12vh;
+  background: radial-gradient(closest-side, rgba(120,230,190,0.12), transparent 70%);
+  filter: blur(70px);
+  animation: bloom-breathe 21s ease-in-out infinite;
 }
 
 /* fine grain over everything */
@@ -238,9 +275,34 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.045;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+
+/* portrait idle float */
+@keyframes portrait-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+.portrait-float { animation: portrait-float 7s ease-in-out infinite; }
+.portrait img {
+  filter: grayscale(0.35) contrast(1.03);
+  transition: filter 0.5s ease, transform 0.5s ease;
+}
+.portrait:hover img {
+  filter: grayscale(0) contrast(1.03);
+  transform: scale(1.03);
+}
+.portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(75,214,163,0);
+  transition: box-shadow 0.4s ease;
+}
+.portrait:hover::after { box-shadow: inset 0 0 0 1px var(--accent-border); }
 
 /* infinite marquee (duplicate track inside) */
 @keyframes marquee {
@@ -272,5 +334,5 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .herobloom { animation: none; }
+  .field-blob, .portrait-float { animation: none !important; }
 }
