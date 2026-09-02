@@ -102,8 +102,9 @@ export default function Home() {
             </div>
 
             {/* Tagline */}
-            <div className="card-in card-cream p-6" style={{ "--d": "0.2s" } as CSSProperties}>
-              <p className="text-[15px]" style={{ color: "#1a1c17", lineHeight: 1.55 }}>
+            <div className="card-in card-cream p-6 sm:p-7" style={{ "--d": "0.2s" } as CSSProperties}>
+              <div className="mb-4 h-[2px] w-7" style={{ background: "var(--accent-2)" }} />
+              <p className="font-serif" style={{ fontSize: "clamp(1.2rem, 0.95rem + 1vw, 1.6rem)", lineHeight: 1.34, color: "#14170f" }}>
                 I like making things that work, and understanding the ones that don&rsquo;t.
               </p>
             </div>
@@ -126,8 +127,8 @@ export default function Home() {
           </div>
 
           {/* RIGHT column — portrait */}
-          <div className="card-in card-cream p-2.5 lg:mt-2" style={{ "--d": "0.24s" } as CSSProperties}>
-            <div className="portrait rounded-[3px]" style={{ aspectRatio: "3 / 4" }}>
+          <div className="card-in card-cream p-2.5 lg:mt-2 self-start" style={{ "--d": "0.24s" } as CSSProperties}>
+            <div className="portrait rounded-[3px]">
               <img src="/avatar.jpeg" alt="Aarnav Noble" />
             </div>
             <div className="px-1.5 pt-2.5 pb-1">
