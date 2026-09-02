@@ -112,11 +112,8 @@ export default function Home() {
             </h1>
 
             <p data-animate style={{ "--stagger": 2, color: "var(--g7)" } as React.CSSProperties} className="text-[17px] leading-[1.8] mb-8">
-              Computer Engineering at Waterloo, working the seam between machine
-              learning and systems: the infrastructure that keeps models fast,
-              observable, and hard to break. Recently a sub-500ms voice-agent
-              platform, a graph neural net for lake-water forecasting, and a
-              flight recorder for AI agents.
+              I like making things that work, and understanding the ones that
+              don&rsquo;t.
             </p>
 
             <div data-animate style={{ "--stagger": 3 } as React.CSSProperties} className="flex flex-wrap gap-2 mb-9">
