@@ -4,19 +4,13 @@ import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
-import { Reveal, CharReveal, Words, CountUp, Scramble, ScrollProgress } from "@/components/motion-lib";
+import { Reveal, CharReveal, Words, Scramble, ScrollProgress } from "@/components/motion-lib";
 import { ShaderField } from "@/components/ShaderField";
 
 const SKILLS = [
   "Python", "Go", "TypeScript", "C / C++", "React", "Next.js", "FastAPI",
   "PyTorch", "Kubernetes", "Docker", "Terraform", "AWS", "PostgreSQL",
   "ClickHouse", "GraphQL", "WebRTC", "OpenTelemetry", "Linux",
-];
-
-const STATS = [
-  { n: 4, pad: 2, label: "internships shipped" },
-  { n: 3, pad: 2, label: "systems built from scratch" },
-  { n: 2028, pad: 0, label: "class of" },
 ];
 
 const NOW = [
@@ -137,14 +131,14 @@ export default function Home() {
       </section>
 
       {/* Skills marquee */}
-      <div className="relative z-10 py-5 marquee-mask" style={{ borderTop: "1px solid var(--g2)", borderBottom: "1px solid var(--g2)" }}>
+      <div className="relative z-10 py-8 marquee-mask" style={{ borderTop: "1px solid var(--g3)", borderBottom: "1px solid var(--g3)" }}>
         <div className="marquee-track">
           {[0, 1].map((dup) => (
             <div key={dup} className="flex shrink-0" aria-hidden={dup === 1}>
               {SKILLS.map((s) => (
-                <span key={s} className="px-6 text-[13px] font-mono whitespace-nowrap" style={{ color: "var(--g7)" }}>
+                <span key={s} className="px-8 text-[20px] font-mono whitespace-nowrap" style={{ color: "var(--g10)" }}>
                   {s}
-                  <span className="ml-6" style={{ color: "var(--g4)" }}>/</span>
+                  <span className="ml-8" style={{ color: "var(--g6)" }}>/</span>
                 </span>
               ))}
             </div>
@@ -152,27 +146,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Stats */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 py-24">
-        <div className="grid grid-cols-3 gap-6">
-          {STATS.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.1}>
-              <div>
-                <div
-                  className="font-serif leading-none"
-                  style={{ fontSize: "clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem)", color: "var(--g12)" }}
-                >
-                  <CountUp to={s.n} pad={s.pad} />
-                </div>
-                <div className="font-label mt-3 text-[10px]" style={{ color: "var(--g7)" }}>{s.label}</div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
       {/* Selected work — editorial index */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 pb-24">
+      <section className="relative z-10 max-w-[1160px] mx-auto px-6 pt-24 pb-24">
         <Reveal>
           <div className="flex items-end justify-between mb-6">
             <h2 className="font-display" style={{ fontSize: "clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
