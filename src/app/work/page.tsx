@@ -156,7 +156,7 @@ export default function Work() {
                     <h2 className="font-display font-[700] text-[24px] sm:text-[26px] tracking-[-0.015em] mb-0.5" style={{ color: "var(--g12)" }}>
                       {role.company}
                     </h2>
-                    <p className="text-[12px] mb-5" style={{ color: "var(--g6)" }}>
+                    <p className="text-[13px] mb-5" style={{ color: "var(--g9)" }}>
                       {role.role.split(",")[0]} · {role.detail.split("·")[0].trim()}
                     </p>
 

@@ -124,7 +124,7 @@ export default function Projects() {
                     </div>
                   </div>
 
-                  <p className="text-[13px] leading-relaxed mb-1 ml-9" style={{ color: "var(--g7)" }}>
+                  <p className="text-[14px] leading-relaxed mb-1 ml-9" style={{ color: "var(--g10)" }}>
                     {project.tagline}
                   </p>
 

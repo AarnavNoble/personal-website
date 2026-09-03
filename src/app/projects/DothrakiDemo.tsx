@@ -183,7 +183,7 @@ export function DothrakiDemo() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-[12px] font-mono"
-              style={{ color: "var(--g6)" }}
+              style={{ color: "var(--g12)" }}
             >
               ↑ pick a phrase to trace the pipeline
             </motion.p>

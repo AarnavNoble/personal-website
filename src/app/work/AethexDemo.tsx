@@ -176,7 +176,7 @@ export function AethexDemo() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-[12px] font-mono"
-              style={{ color: "var(--g6)" }}
+              style={{ color: "var(--g12)" }}
             >
               ↑ wait for the agent to start speaking, then interrupt it mid-sentence
             </motion.p>
