@@ -1,0 +1,149 @@
+#!/usr/bin/env node
+// Builds web-sized WebP copies of the RAWs picked in scripts/photos.json and
+// regenerates src/lib/photos.ts. macOS only: needs sips, cwebp and exiftool.
+//
+//   node scripts/build-photos.mjs [raw-folder]     (default: ~/landscapepics)
+//
+// In photos.json, each album lists the source sub-folders to look in and the
+// frames to publish, in display order. The first frame is the album cover.
+
+import { execFileSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { homedir, tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const SRC = process.argv[2] ?? join(homedir(), "landscapepics");
+const OUT = join(ROOT, "public", "photos");
+const FULL_EDGE = 2000; // longest edge of the lightbox image
+const THUMB_EDGE = 900; // longest edge of the grid image
+
+const run = (cmd, args) => execFileSync(cmd, args, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+
+const { albums } = JSON.parse(readFileSync(join(ROOT, "scripts", "photos.json"), "utf8"));
+const tmp = mkdtempSync(join(tmpdir(), "photos-"));
+const keep = new Set();
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function findRaw(dirs, name) {
+  for (const dir of dirs) {
+    for (const ext of ["ARW", "arw", "JPG", "jpg"]) {
+      const p = join(SRC, dir, `${name}.${ext}`);
+      if (existsSync(p)) return p;
+    }
+  }
+  throw new Error(`${name} not found in ${dirs.join(", ")} under ${SRC}`);
+}
+
+function dimensions(file) {
+  const out = run("sips", ["-g", "pixelWidth", "-g", "pixelHeight", file]);
+  return {
+    width: Number(out.match(/pixelWidth: (\d+)/)[1]),
+    height: Number(out.match(/pixelHeight: (\d+)/)[1]),
+  };
+}
+
+// sips keeps portrait frames as sideways pixels plus an EXIF orientation tag,
+// which cwebp ignores, so rotate the pixels and drop the tag before encoding.
+const ROTATION = { 3: 180, 6: 90, 8: 270 };
+function bakeOrientation(raw, jpg) {
+  const degrees = ROTATION[run("exiftool", ["-n", "-s3", "-Orientation", raw]).trim()];
+  run("exiftool", ["-q", "-overwrite_original", "-Orientation=", jpg]);
+  if (degrees) run("sips", ["-r", String(degrees), jpg]);
+}
+
+function exif(file) {
+  const [d] = JSON.parse(run("exiftool", ["-json", "-FNumber", "-ExposureTime", "-ISO", "-FocalLength", "-DateTimeOriginal", file]));
+  const parts = [];
+  if (d.FocalLength) parts.push(`${Math.round(parseFloat(d.FocalLength))}mm`);
+  if (d.FNumber) parts.push(`ƒ/${d.FNumber}`);
+  if (d.ExposureTime) parts.push(`${d.ExposureTime}s`);
+  if (d.ISO) parts.push(`ISO ${d.ISO}`);
+  const m = /^(\d{4}):(\d{2})/.exec(d.DateTimeOriginal ?? "");
+  return { settings: parts.join(" · "), date: m ? `${MONTHS[Number(m[2]) - 1]} ${m[1]}` : "" };
+}
+
+const data = albums.map((album) => {
+  const dir = join(OUT, album.slug);
+  mkdirSync(dir, { recursive: true });
+  let date = "";
+
+  const photos = album.files.map((name, i) => {
+    const raw = findRaw(album.dirs, name);
+    const full = join(dir, `${name}.webp`);
+    const thumb = join(dir, `${name}-thumb.webp`);
+    keep.add(full).add(thumb);
+
+    if (!existsSync(full) || !existsSync(thumb)) {
+      const jpg = join(tmp, `${album.slug}-${name}.jpg`);
+      run("sips", ["-s", "format", "jpeg", "-s", "formatOptions", "100", "-Z", String(FULL_EDGE), raw, "--out", jpg]);
+      bakeOrientation(raw, jpg);
+      const { width, height } = dimensions(jpg);
+      const scale = THUMB_EDGE / Math.max(width, height);
+      run("cwebp", ["-quiet", "-q", "80", "-m", "6", jpg, "-o", full]);
+      run("cwebp", ["-quiet", "-q", "78", "-m", "6", "-resize", String(Math.round(width * scale)), String(Math.round(height * scale)), jpg, "-o", thumb]);
+      console.log(`built ${album.slug}/${name}`);
+    }
+
+    const { width, height } = dimensions(full);
+    const meta = exif(raw);
+    date ||= meta.date;
+    return {
+      id: `${album.slug}/${name}`,
+      full: `/photos/${album.slug}/${name}.webp`,
+      thumb: `/photos/${album.slug}/${name}-thumb.webp`,
+      width,
+      height,
+      alt: `${album.title}, frame ${i + 1}`,
+      settings: meta.settings,
+    };
+  });
+
+  return { slug: album.slug, title: album.title, place: album.place ?? "", date, photos };
+});
+
+// Drop outputs for frames that are no longer in photos.json.
+for (const entry of readdirSync(OUT, { withFileTypes: true })) {
+  if (!entry.isDirectory()) continue;
+  const slug = entry.name;
+  const dir = join(OUT, slug);
+  for (const f of readdirSync(dir)) {
+    if (f.endsWith(".webp") && !keep.has(join(dir, f))) {
+      rmSync(join(dir, f));
+      console.log(`removed ${slug}/${f}`);
+    }
+  }
+  if (!readdirSync(dir).length) rmSync(dir, { recursive: true });
+}
+rmSync(tmp, { recursive: true });
+
+writeFileSync(
+  join(ROOT, "src", "lib", "photos.ts"),
+  `// Generated by scripts/build-photos.mjs. Edit scripts/photos.json and re-run it.
+
+export type Photo = {
+  id: string;
+  full: string;
+  thumb: string;
+  width: number;
+  height: number;
+  alt: string;
+  settings: string;
+};
+
+export type Album = {
+  slug: string;
+  title: string;
+  place: string;
+  date: string;
+  photos: Photo[];
+};
+
+export const CAMERA = "Sony a6300";
+
+export const ALBUMS: Album[] = ${JSON.stringify(data, null, 2)};
+`,
+);
+
+console.log(`${data.reduce((n, a) => n + a.photos.length, 0)} photos in ${data.length} albums`);
