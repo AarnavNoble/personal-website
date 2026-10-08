@@ -1,0 +1,256 @@
+{
+  "albums": [
+    {
+      "slug": "toronto-islands",
+      "title": "Toronto Islands",
+      "place": "Toronto",
+      "dirs": [
+        "toronto islands"
+      ],
+      "files": [
+        "DSC00099",
+        "DSC00098",
+        "DSC00001",
+        "DSC00008",
+        "DSC00011",
+        "DSC00012",
+        "DSC00013",
+        "DSC00019",
+        "DSC00024",
+        "DSC00058",
+        "DSC00059",
+        "DSC00062",
+        "DSC00063",
+        "DSC00067",
+        "DSC00070",
+        "DSC00071",
+        "DSC00073",
+        "DSC00075",
+        "DSC00076",
+        "DSC00077",
+        "DSC00078",
+        "DSC00081",
+        "DSC00087",
+        "DSC00088",
+        "DSC00089",
+        "DSC00090",
+        "DSC00096",
+        "DSC00097",
+        "DSC00103",
+        "DSC00104",
+        "DSC00105",
+        "DSC09979",
+        "DSC09981",
+        "DSC09982",
+        "DSC09984",
+        "DSC09986",
+        "DSC09987",
+        "DSC09997"
+      ]
+    },
+    {
+      "slug": "lions-head",
+      "title": "Lion's Head",
+      "place": "",
+      "dirs": [
+        "lions head"
+      ],
+      "files": [
+        "DSC09971",
+        "DSC09804",
+        "DSC09829",
+        "DSC09838",
+        "DSC09907",
+        "DSC09915",
+        "DSC09968",
+        "DSC09970"
+      ]
+    },
+    {
+      "slug": "streetsville",
+      "title": "Streetsville",
+      "place": "Mississauga",
+      "dirs": [
+        "streetsville"
+      ],
+      "files": [
+        "DSC09649",
+        "DSC09652",
+        "DSC09674",
+        "DSC09680"
+      ]
+    },
+    {
+      "slug": "home",
+      "title": "Home",
+      "place": "",
+      "dirs": [
+        "home"
+      ],
+      "files": [
+        "DSC08963",
+        "DSC08964",
+        "DSC08967",
+        "DSC08968",
+        "DSC08969"
+      ]
+    },
+    {
+      "slug": "san-diego",
+      "title": "San Diego",
+      "place": "California",
+      "dirs": [
+        "san diego 1",
+        "san diego 2"
+      ],
+      "files": [
+        "DSC08556",
+        "DSC08565",
+        "DSC08570",
+        "DSC08632",
+        "DSC08655",
+        "DSC08656",
+        "DSC08657",
+        "DSC08658",
+        "DSC08659",
+        "DSC08661",
+        "DSC08693",
+        "DSC08695",
+        "DSC08696",
+        "DSC08697",
+        "DSC08699",
+        "DSC08703",
+        "DSC08713",
+        "DSC08714",
+        "DSC08724",
+        "DSC08741",
+        "DSC08768",
+        "DSC08769",
+        "DSC08774",
+        "DSC08775",
+        "DSC08777",
+        "DSC08778",
+        "DSC08779",
+        "DSC08807",
+        "DSC08812",
+        "DSC08815",
+        "DSC08816",
+        "DSC08818",
+        "DSC08822",
+        "DSC08826",
+        "DSC08827",
+        "DSC08828",
+        "DSC08830",
+        "DSC08838",
+        "DSC08864",
+        "DSC08865",
+        "DSC08866",
+        "DSC08881",
+        "DSC08932",
+        "DSC08933",
+        "DSC08945",
+        "DSC08946",
+        "DSC08948",
+        "DSC08949"
+      ]
+    },
+    {
+      "slug": "hollywood",
+      "title": "Hollywood",
+      "place": "Los Angeles",
+      "dirs": [
+        "hollywood"
+      ],
+      "files": [
+        "DSC08305",
+        "DSC08353",
+        "DSC08420",
+        "DSC08465",
+        "DSC08471",
+        "DSC08475",
+        "DSC08476",
+        "DSC08477",
+        "DSC08479",
+        "DSC08480",
+        "DSC08481",
+        "DSC08482",
+        "DSC08510",
+        "DSC08515",
+        "DSC08516",
+        "DSC08517",
+        "DSC08519",
+        "DSC08521",
+        "DSC08526",
+        "DSC08528"
+      ]
+    },
+    {
+      "slug": "grand-canyon",
+      "title": "Grand Canyon",
+      "place": "Arizona",
+      "dirs": [
+        "grand canyon"
+      ],
+      "files": [
+        "DSC08025",
+        "DSC08026",
+        "DSC08030",
+        "DSC08031",
+        "DSC08032",
+        "DSC08088",
+        "DSC08092",
+        "DSC08093",
+        "DSC08094",
+        "DSC08104",
+        "DSC08110",
+        "DSC08111",
+        "DSC08112",
+        "DSC08118",
+        "DSC08119",
+        "DSC08122",
+        "DSC08123",
+        "DSC08130",
+        "DSC08142",
+        "DSC08147",
+        "DSC08152",
+        "DSC08158",
+        "DSC08159",
+        "DSC08160",
+        "DSC08167",
+        "DSC08180",
+        "DSC08181",
+        "DSC08188",
+        "DSC08202",
+        "DSC08203",
+        "DSC08204",
+        "DSC08213",
+        "DSC08214",
+        "DSC08218",
+        "DSC08220",
+        "DSC08226",
+        "DSC08227",
+        "DSC08228",
+        "DSC08229",
+        "DSC08230",
+        "DSC08231",
+        "DSC08277",
+        "DSC08291",
+        "DSC08297",
+        "DSC08298",
+        "DSC08299"
+      ]
+    },
+    {
+      "slug": "first-frames",
+      "title": "First Frames",
+      "place": "",
+      "dirs": [
+        "first pics"
+      ],
+      "files": [
+        "DSC08001",
+        "DSC08017"
+      ]
+    }
+  ]
+}

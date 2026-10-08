@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
+import { ALBUMS, CAMERA } from "@/lib/photos";
 import { Reveal, CharReveal, Words, Scramble, ScrollProgress } from "@/components/motion-lib";
 import { ShaderField } from "@/components/ShaderField";
 
@@ -19,6 +20,12 @@ const NOW = [
 ];
 
 const INTERESTS = ["photography", "film", "soccer", "MMA", "tennis", "travel"];
+
+// Home teaser: the cover frame of a few albums.
+const PHOTO_COVERS = ["grand-canyon", "san-diego", "lions-head", "toronto-islands"]
+  .map((slug) => ALBUMS.find((a) => a.slug === slug))
+  .filter((album) => album !== undefined)
+  .map((album) => ({ album, photo: album.photos[0] }));
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -61,6 +68,7 @@ export default function Home() {
           <div className="flex items-center gap-6 text-[13px] pr-1">
             <Link href="/work" className="link-dim">Work</Link>
             <Link href="/projects" className="link-dim">Projects</Link>
+            <Link href="/photos" className="link-dim">Photos</Link>
             <a href={LINKS.resume} target="_blank" rel="noopener" className="link-dim hidden sm:inline">Résumé</a>
             <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim hidden sm:inline">GitHub</a>
             <kbd
@@ -181,6 +189,32 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Photography teaser */}
+      <section className="relative z-10 max-w-[1160px] mx-auto px-6 pb-24">
+        <Reveal>
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <p className="font-label text-[10px] mb-3" style={{ color: "var(--g6)" }}>Shot on {CAMERA}</p>
+              <h2 className="font-display" style={{ fontSize: "clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
+                <Words text="Photography" />
+              </h2>
+            </div>
+            <Link href="/photos" className="link-dim text-[13px] mb-1.5">All photos →</Link>
+          </div>
+        </Reveal>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {PHOTO_COVERS.map(({ album, photo }, i) => (
+            <Reveal key={photo.id} delay={i * 0.06}>
+              <Link href={`/photos/${album.slug}`} className="photo-tile photo-cover" aria-label={`${album.title} photos`}>
+                <img src={photo.thumb} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
+                <span className="photo-meta font-label">{album.title}</span>
               </Link>
             </Reveal>
           ))}

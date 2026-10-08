@@ -91,6 +91,7 @@ export default function Work() {
           <Link href="/" className="link-dim text-[13px] pl-2">← Aarnav Noble</Link>
           <div className="flex items-center gap-6 text-[13px] pr-1">
             <Link href="/projects" className="link-dim">Projects</Link>
+            <Link href="/photos" className="link-dim">Photos</Link>
             <a href={LINKS.resume} target="_blank" rel="noopener" className="link-dim hidden sm:inline">Résumé</a>
             <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim hidden sm:inline">GitHub</a>
           </div>
