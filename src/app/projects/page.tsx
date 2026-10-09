@@ -8,10 +8,11 @@ import { ShaderField } from "@/components/ShaderField";
 import { RoamDemo } from "./RoamDemo";
 import { DothrakiDemo } from "./DothrakiDemo";
 import { VestigeDemo } from "./VestigeDemo";
+import { EngineDemo } from "./EngineDemo";
 
-const PROJECT_ACCENTS = ["#6c8ebf", "#34d399", "#E8A33D", "#ef4444"];
-// Order must track PROJECTS in src/lib/data.ts: vestige, roam, dothraki-asr, flame-forecaster
-const PROJECT_DEMOS = [VestigeDemo, RoamDemo, DothrakiDemo, undefined];
+const PROJECT_ACCENTS = ["#6c8ebf", "#a78bfa", "#34d399", "#E8A33D", "#ef4444"];
+// Order must track PROJECTS in src/lib/data.ts: vestige, llm-engine, roam, dothraki-asr, flame-forecaster
+const PROJECT_DEMOS = [VestigeDemo, EngineDemo, RoamDemo, DothrakiDemo, undefined];
 
 function Pipeline({ steps, accent }: { steps: typeof PROJECTS[0]["pipeline"]; accent: string }) {
   return (
