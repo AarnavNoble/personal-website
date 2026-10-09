@@ -147,6 +147,65 @@ const PROJECTS_RAW = [
     },
   },
   {
+    slug: "llm-engine",
+    name: "LLM Engine",
+    tagline: "LLM inference server written from scratch in C++: paged KV cache, continuous batching, prefix caching, and an OpenAI-compatible streaming API. No PyTorch at runtime.",
+    description:
+      "A small serving engine for Llama-architecture models (Qwen2.5-0.5B, TinyLlama-1.1B) built from the same parts production engines use. Weights are read straight from safetensors, the tokenizer parses tokenizer.json directly, and the forward pass is checked layer by layer against Hugging Face on 22 prompts. The KV cache is paged with block tables, the scheduler batches at the iteration level with chunked prefill and preemption, and shared prompt prefixes reuse the same physical blocks. The CPU path is complete and verified; the CUDA backend is in progress, so every published number says which hardware it came from.",
+    github: "https://github.com/AarnavNoble/llm-engine",
+    demo: null,
+    stack: ["C++17", "CMake", "BLAS", "Catch2", "Prometheus", "Docker", "Helm", "KEDA"],
+    pipeline: [
+      {
+        step: "Model Loading",
+        tech: "safetensors + tokenizer.json",
+        detail:
+          "Reads weights from safetensors and parses the tokenizer file directly, with every dimension taken from the model config. A second architecture, TinyLlama-1.1B, passes the same verification unchanged.",
+      },
+      {
+        step: "Paged KV Cache",
+        tech: "16-token blocks + block tables",
+        detail:
+          "Each sequence owns a table of fixed-size blocks drawn from a free list, so a prompt allocates only what it uses: 98.8% slot utilization against 55.5% for the best contiguous allocator on the same workload.",
+      },
+      {
+        step: "Continuous Batching",
+        tech: "iteration-level scheduler",
+        detail:
+          "Finished sequences leave the batch on the step they finish and new ones join on the next, under a token budget. Long prompts are prefilled in chunks, and an admission watermark stops new sequences from forcing preemptions.",
+      },
+      {
+        step: "Prefix Caching",
+        tech: "chained block hashes",
+        detail:
+          "Full blocks are hashed together with the previous block's hash and shared by refcount, so requests with the same system prompt skip its prefill. Unowned blocks sit in an LRU until memory pressure evicts them.",
+      },
+      {
+        step: "Streaming API",
+        tech: "OpenAI-compatible SSE",
+        detail:
+          "Serves /v1/completions and /v1/chat/completions with streaming, so any OpenAI client works. SIGTERM flips readiness to 503, finishes in-flight sequences, then exits.",
+      },
+      {
+        step: "Deploy & Metrics",
+        tech: "Prometheus + Helm + KEDA",
+        detail:
+          "Exports queue depth, KV block usage, prefix hit ratio, TTFT and inter-token latency. The Helm chart requests one GPU per pod and a KEDA ScaledObject scales on queue depth; CI fails if a dashboard panel references a metric the server does not expose.",
+      },
+    ],
+    sampleOutput: {
+      label: "Measured results (CPU path, Qwen2.5-0.5B)",
+      steps: [
+        { label: "Correctness", value: "argmax identical to Hugging Face on 22 prompts, all 24 layers checked" },
+        { label: "KV slot utilization", value: "98.8% paged vs. 55.5% contiguous" },
+        { label: "Continuous vs. static batching", value: "1.47x tokens/s · 5.9x faster TTFT p50" },
+        { label: "Prefix caching", value: "2.8x faster TTFT p50 on a shared 512-token system prompt" },
+        { label: "Chunked prefill", value: "11.8x shorter worst decode stall" },
+        { label: "CUDA backend", value: "in progress" },
+      ],
+    },
+  },
+  {
     slug: "dothraki-asr",
     name: "Dothraki ASR",
     tagline: "Zero-shot ASR for a constructed language with zero training data; phoneme matching against the Dothraki lexicon.",
@@ -302,7 +361,7 @@ const PROJECTS_RAW = [
 ];
 
 // Display order: Vestige is the flagship and leads.
-const PROJECT_ORDER = ["vestige", "roam", "dothraki-asr", "flame-forecaster"];
+const PROJECT_ORDER = ["vestige", "llm-engine", "roam", "dothraki-asr", "flame-forecaster"];
 export const PROJECTS = PROJECT_ORDER.map(
   (slug) => PROJECTS_RAW.find((p) => p.slug === slug)!,
 );
