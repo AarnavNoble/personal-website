@@ -10,13 +10,13 @@ const PIPELINE = [
   { name: "RAG Retrieval",       tech: "FAISS + sentence-transformers", ms: 840  },
   { name: "POI Fetch",           tech: "Overpass API",                   ms: 620  },
   { name: "Preference Ranking",  tech: "LightGBM LambdaRank",            ms: 380  },
-  { name: "Route Optimization",  tech: "OR-Tools VRP",                   ms: 1200 },
-  { name: "LLM Synthesis",       tech: "Groq · Llama 3.3 70B",           ms: 2100 },
+  { name: "Route Optimization",  tech: "OR-Tools",                       ms: 1200 },
+  { name: "LLM Writing",         tech: "Groq · model failover",          ms: 2100 },
 ];
 
 const STEP_DURATION = 650;
 
-const sample = PROJECTS[0].sampleOutput;
+const sample = PROJECTS.find(p => p.slug === "roam")!.sampleOutput;
 const DAYS: { day: string; stops: { time: string; name: string; area: string; note: string }[] }[] =
   ("days" in sample && sample.days) ? sample.days as { day: string; stops: { time: string; name: string; area: string; note: string }[] }[] : [];
 
