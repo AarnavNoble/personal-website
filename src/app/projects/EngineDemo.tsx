@@ -5,55 +5,73 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const ACCENT = "#a78bfa";
 
-// Numbers are from the repo's docs/benchmarks.md: CPU backend, Qwen2.5-0.5B.
+// Numbers are from the repo's docs/results.md (Qwen2.5-0.5B). Each experiment names the
+// hardware it was measured on; ratios are only comparable within one machine.
 const EXPERIMENTS = [
   {
     label: "Continuous batching",
     steps: [
-      { label: "Workload", value: "48 requests · bimodal output lengths · 16 concurrent" },
-      { label: "Static batching", value: "38.9 tokens/s · TTFT p50 13,673 ms" },
-      { label: "Continuous batching", value: "57.1 tokens/s · TTFT p50 2,330 ms" },
-      { label: "Why", value: "a new request no longer waits for the whole batch to drain" },
+      { label: "Workload", value: "32 concurrent requests · prompts of 128/512/1024 tokens · outputs around 128" },
+      { label: "Static batching", value: "564 tokens/s · TTFT p50 3,993 ms" },
+      { label: "Continuous batching", value: "771 tokens/s · TTFT p50 75 ms" },
+      { label: "Cost", value: "inter-token p50 23.1 ms → 39.1 ms, every resident sequence advances each step" },
     ],
     before: "static: first token waits behind the longest generation in flight",
     after: "continuous: sequences leave and join the batch every step",
-    verdict: "1.47x throughput · 5.9x faster TTFT",
+    verdict: "53x faster TTFT · 1.37x throughput",
+    hardware: "CUDA backend, NVIDIA A40",
   },
   {
     label: "Paged KV cache",
     steps: [
-      { label: "Workload", value: "512 requests · 65,536 KV slots · 4,096 blocks of 16" },
-      { label: "Contiguous", value: "55.5% slot utilization · 44.5% wasted" },
-      { label: "Paged", value: "98.8% slot utilization · 1.2% wasted" },
+      { label: "Workload", value: "256 requests · 65,536 KV slots · 4,096 blocks of 16" },
+      { label: "Contiguous", value: "54.8% slot utilization · 45.2% wasted" },
+      { label: "Paged", value: "99.0% slot utilization · 1.0% wasted" },
       { label: "Why", value: "a prompt allocates ceil(n/16) blocks, not its worst case" },
     ],
     before: "contiguous: reserve prompt + output cap up front",
     after: "paged: block tables grow one 16-token block at a time",
-    verdict: "98.8% vs 55.5% slot utilization",
+    verdict: "99.0% vs 54.8% slot utilization",
+    hardware: "allocator property, hardware independent",
   },
   {
     label: "Prefix caching",
     steps: [
       { label: "Workload", value: "32 requests sharing a 512-token system prompt" },
-      { label: "Cache off", value: "TTFT p50 20,118 ms · wall clock 101.7 s" },
-      { label: "Cache on", value: "TTFT p50 7,268 ms · wall clock 35.0 s" },
-      { label: "Hit ratio", value: "77.5% · 992 of 1,280 blocks, the ceiling for this workload" },
+      { label: "Cache off", value: "TTFT p50 1,627 ms · wall clock 44.0 s" },
+      { label: "Cache on", value: "TTFT p50 113 ms · wall clock 7.8 s" },
+      { label: "Hit ratio", value: "95.8% of blocks served from the cache" },
     ],
     before: "every request prefills the same system prompt again",
     after: "shared blocks are reused by refcount, only the tail is prefilled",
-    verdict: "2.8x faster TTFT",
+    verdict: "14.4x faster TTFT",
+    hardware: "CUDA backend, NVIDIA A40",
+  },
+  {
+    label: "GQA attention kernel",
+    steps: [
+      { label: "Profile", value: "attention is 87.5% of a decode step · 31.56 of 36.09 ms" },
+      { label: "First attempt", value: "one block per (token, KV head): 1.33x slower · 64 blocks on a card with 84 SMs" },
+      { label: "Fix", value: "512 threads per block: attention 31.56 ms → 19.43 ms per step" },
+      { label: "End to end", value: "771 → 980 tokens/s" },
+    ],
+    before: "every query head re-reads the K/V its group shares, seven times over",
+    after: "K/V is read once per group, with wider blocks to keep the card busy",
+    verdict: "1.62x faster attention kernel · 1.27x throughput",
+    hardware: "CUDA backend, NVIDIA A40",
   },
   {
     label: "Chunked prefill",
     steps: [
       { label: "Workload", value: "4 streams decoding · 2,048-token prompt arrives mid-flight" },
-      { label: "Unchunked", value: "worst inter-token gap 23,203 ms" },
-      { label: "Chunk size 128", value: "worst inter-token gap 1,969 ms" },
-      { label: "Cost", value: "arriving prompt's own TTFT 23.8 s → 24.7 s" },
+      { label: "CPU, unchunked", value: "worst inter-token gap 23,203 ms" },
+      { label: "CPU, chunk size 128", value: "worst inter-token gap 1,969 ms" },
+      { label: "A40", value: "48 ms → 37 ms · the prefill is too fast to leave a stall worth removing" },
     ],
     before: "one forward pass for the whole prompt stalls every stream",
     after: "prefill is split into chunks that share steps with decode",
-    verdict: "11.8x shorter worst stall",
+    verdict: "11.8x shorter worst stall on CPU · 1.3x on an A40",
+    hardware: "CPU backend and CUDA backend",
   },
 ];
 
@@ -191,7 +209,7 @@ export function EngineDemo() {
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[11px] font-mono" style={{ color: "#22c55e" }}>✓ {experiment.verdict}</span>
-                    <span className="text-[10px] font-mono" style={{ color: "var(--g6)" }}>· CPU backend, Qwen2.5-0.5B</span>
+                    <span className="text-[10px] font-mono" style={{ color: "var(--g6)" }}>· {experiment.hardware}</span>
                   </div>
                 </motion.div>
               )}
