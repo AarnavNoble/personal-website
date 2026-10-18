@@ -1,288 +1,182 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState, type CSSProperties } from "react";
-import { motion } from "framer-motion";
-import { LINKS, PROJECTS, EXPERIENCE } from "@/lib/data";
+import { EXPERIENCE, OPEN_SOURCE, PROJECTS, LINKS } from "@/lib/data";
 import { ALBUMS, CAMERA } from "@/lib/photos";
-import { Reveal, CharReveal, Words, Scramble, ScrollProgress } from "@/components/motion-lib";
-import { ShaderField } from "@/components/ShaderField";
+import { AsciiField } from "@/components/dither/AsciiField";
+import { ColorDither } from "@/components/dither/ColorDither";
+import { CopyEmail } from "@/components/dither/CopyEmail";
+import { HeroDesk } from "@/components/dither/HeroDesk";
+import { ProjectCover } from "@/components/dither/ProjectCover";
+import { Window } from "@/components/dither/Window";
+import { FILE_TAGS, albumTag, anchor, cover } from "@/components/dither/tags";
+
+// The contact section's text field is written from the work itself.
+const FIELD_PHRASES = [
+  "paged kv cache", "continuous batching", "prefix caching", "53x faster ttft",
+  "replay as a test", "30k spans/sec", "zero model calls", "learning to rank",
+  "route optimization", "prefill before decode", "kpa panic window", "cuda kernels",
+  "gqa attention 1.62x", "clickhouse", "opentelemetry", "sub-500ms voice",
+  "interrupt state machine", "kubernetes", "graph neural nets", "waterloo",
+];
 
 const SKILLS = [
-  "Python", "Go", "TypeScript", "C / C++", "React", "Next.js", "FastAPI",
-  "PyTorch", "Kubernetes", "Docker", "Terraform", "AWS", "PostgreSQL",
-  "ClickHouse", "GraphQL", "WebRTC", "OpenTelemetry", "Linux",
+  "Python", "Go", "C/C++", "CUDA", "TypeScript", "PyTorch", "Kubernetes", "Docker",
+  "Terraform", "AWS", "PostgreSQL", "Redis", "ClickHouse", "Prometheus", "OpenTelemetry",
+  "FastAPI", "Next.js", "WebRTC", "Linux",
 ];
 
-const NOW = [
-  { label: "studying", value: "Computer Engineering · University of Waterloo" },
-  { label: "looking for", value: "SWE / ML-infra co-op · Winter 2027" },
-];
-
-const INTERESTS = ["photography", "film", "soccer", "MMA", "tennis", "travel"];
-
-// Home teaser: the cover frame of a few albums.
-const PHOTO_COVERS = ["grand-canyon", "san-diego", "lions-head", "toronto-islands"]
+const PHOTO_COVERS = ["grand-canyon", "toronto-islands", "san-diego", "hollywood"]
   .map((slug) => ALBUMS.find((a) => a.slug === slug))
   .filter((album) => album !== undefined)
   .map((album) => ({ album, photo: album.photos[0] }));
 
-export default function Home() {
-  const [copied, setCopied] = useState(false);
-
-  function copyEmail() {
-    navigator.clipboard.writeText(LINKS.email).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.metaKey || e.ctrlKey) return;
-      if (e.key === "g") window.open(LINKS.github, "_blank");
-      if (e.key === "l") window.open(LINKS.linkedin, "_blank");
-      if (e.key === "r") window.open(LINKS.resume, "_blank");
-      if (e.key === "e") copyEmail();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
+function SectionHead({ title, href, label }: { title: string; href: string; label: string }) {
   return (
-    <div className="grain relative min-h-screen overflow-x-clip">
-      <ScrollProgress />
-      <ShaderField />
+    <div className="block-head">
+      <h2>{title}</h2>
+      <Link href={href}>{label}</Link>
+    </div>
+  );
+}
 
-      {/* Nav */}
-      <motion.nav
-        initial={{ y: -16, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-40"
-      >
-        <div
-          className="max-w-[1160px] mx-auto mt-3 px-4 h-11 rounded-full flex items-center justify-end"
-          style={{ background: "rgba(10,12,10,0.42)", border: "1px solid var(--g3)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
-        >
-          <div className="flex items-center gap-6 text-[13px] pr-1">
-            <Link href="/work" className="link-dim">Work</Link>
-            <Link href="/projects" className="link-dim">Projects</Link>
-            <Link href="/photos" className="link-dim">Photos</Link>
-            <a href={LINKS.resume} target="_blank" rel="noopener" className="link-dim hidden sm:inline">Résumé</a>
-            <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim hidden sm:inline">GitHub</a>
-            <kbd
-              className="hidden sm:flex items-center text-[11px] font-mono px-2 py-1 rounded cursor-pointer"
-              style={{ color: "var(--g7)", background: "var(--g2)", border: "1px solid var(--g4)" }}
-              onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }))}
-            >
-              ⌘K
-            </kbd>
+export default function Home() {
+  return (
+    <main>
+      {/* Hero */}
+      <section className="hero">
+        <span className="guide g1" aria-hidden="true" />
+        <span className="guide g2" aria-hidden="true" />
+        <div className="wrap hero-inner">
+          <div className="hero-meta">
+            <p className="label">
+              <span className="sq" aria-hidden="true" />Open to Winter 2027 co&#8209;ops<br />
+              Computer Engineering, University of Waterloo
+            </p>
           </div>
+          <h1 className="mega">
+            <span>Aarnav Noble.</span>
+            <span className="dim">Software and ML infrastructure.</span>
+          </h1>
+          <p className="lede">I like making things that work, and understanding the ones that don&rsquo;t.</p>
+          <div className="actions">
+            <a className="pill pill-fill" href={LINKS.resume} target="_blank" rel="noopener">Résumé</a>
+            <Link className="pill" href="/projects">See projects</Link>
+          </div>
+          <p className="social">
+            <a href={LINKS.github} target="_blank" rel="noopener">GitHub</a>
+            <a href={LINKS.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+            <CopyEmail email={LINKS.email} className="text-btn" />
+          </p>
         </div>
-      </motion.nav>
-
-      {/* Hero — full-bleed shader with scattered cards */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 min-h-[100svh] flex items-center pt-24 pb-16">
-        <div className="w-full grid gap-3.5 lg:grid-cols-[460px_540px] lg:justify-center lg:gap-12 lg:items-start">
-
-          {/* LEFT column */}
-          <div className="flex flex-col gap-3.5">
-            {/* Name */}
-            <div className="card-in card-cream p-7 sm:p-9" style={{ "--d": "0.05s" } as CSSProperties}>
-              <span className="font-label text-[11px]" style={{ color: "#4a4a3f" }}>Computer Engineer · Waterloo</span>
-              <h1
-                className="font-display mt-4"
-                style={{ fontSize: "clamp(2.75rem, 2rem + 2.8vw, 4.25rem)", fontWeight: 400, letterSpacing: "-0.045em", lineHeight: 0.98, color: "#0c0f0d" }}
-              >
-                <CharReveal text="Aarnav" delay={0.2} />
-                <CharReveal text="Noble" delay={0.44} />
-              </h1>
-            </div>
-
-            {/* Tagline */}
-            <div className="card-in card-cream p-7 sm:p-8" style={{ "--d": "0.2s" } as CSSProperties}>
-              <div className="mb-4 h-[2px] w-8" style={{ background: "var(--accent-2)" }} />
-              <p className="font-serif" style={{ fontSize: "clamp(1.2rem, 1rem + 0.95vw, 1.6rem)", lineHeight: 1.4, color: "#14170f" }}>
-                I like making things that work, and understanding the ones that don&rsquo;t.
-              </p>
-            </div>
-
-            {/* CTA + status */}
-            <div className="card-in card p-5 sm:p-6" style={{ "--d": "0.32s" } as CSSProperties}>
-              <span className="font-label text-[10px]" style={{ color: "var(--accent)" }}>looking for</span>
-              <div className="mt-2 text-[14px]" style={{ color: "var(--g10)" }}>SWE / ML-infra co-op — Winter 2027</div>
-              <div className="my-4 h-px" style={{ background: "var(--g4)" }} />
-              <div className="flex flex-wrap items-center gap-2.5">
-                <a href={LINKS.resume} target="_blank" rel="noopener" className="btn-fill">Résumé ↗</a>
-                <Link href="/projects" className="btn-ghost">Projects →</Link>
-              </div>
-              <div className="mt-4 flex gap-4 text-[13px]">
-                <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim">GitHub</a>
-                <a href={LINKS.linkedin} target="_blank" rel="noopener" className="link-dim">LinkedIn</a>
-                <button onClick={copyEmail} className="link-dim">{copied ? "Copied ✓" : "Email"}</button>
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT column — portrait */}
-          <div className="card-in card-cream p-2.5 self-start" style={{ "--d": "0.24s" } as CSSProperties}>
-            <div className="portrait rounded-[3px]">
-              <img src="/avatar.jpeg" alt="Aarnav Noble" />
-            </div>
-            <div className="px-1.5 pt-2.5 pb-1">
-              <span className="font-label text-[9px]" style={{ color: "#4a4a3f" }}>Aarnav Noble — Waterloo</span>
-            </div>
-          </div>
-
-        </div>
+        <HeroDesk photo={cover("lions-head")} scan={cover("grand-canyon")} />
       </section>
 
-      {/* Skills marquee */}
-      <div className="relative z-10 py-8 marquee-mask" style={{ borderTop: "1px solid var(--g3)", borderBottom: "1px solid var(--g3)" }}>
-        <div className="marquee-track">
+      {/* Skills */}
+      <div className="ticker" aria-label="Skills">
+        <div className="ticker-belt">
           {[0, 1].map((dup) => (
-            <div key={dup} className="flex shrink-0" aria-hidden={dup === 1}>
-              {SKILLS.map((s) => (
-                <span key={s} className="px-8 text-[20px] font-mono whitespace-nowrap" style={{ color: "var(--g10)" }}>
-                  {s}
-                  <span className="ml-8" style={{ color: "var(--g6)" }}>/</span>
-                </span>
-              ))}
-            </div>
+            <ul key={dup} aria-hidden={dup === 1 || undefined}>
+              {SKILLS.map((s) => <li key={s}>{s}</li>)}
+            </ul>
           ))}
         </div>
       </div>
 
-      {/* Selected work — editorial index */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 pt-24 pb-24">
-        <Reveal>
-          <div className="flex items-end justify-between mb-6">
-            <h2 className="font-display" style={{ fontSize: "clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
-              <Words text="Selected work" />
-            </h2>
-            <Link href="/projects" className="link-dim text-[13px] mb-1.5">All projects →</Link>
-          </div>
-        </Reveal>
-
-        <div className="work-index">
-          {PROJECTS.map((p, i) => (
-            <Reveal key={p.slug} delay={i * 0.06}>
-              <Link href="/projects" className="work-row group">
-                <div className="flex items-baseline gap-4 sm:gap-6">
-                  <span className="font-label text-[10px] shrink-0 w-6" style={{ color: "var(--g6)" }}>
-                    <Scramble text={`0${i + 1}`} />
-                  </span>
-                  <h3
-                    className="work-name font-display"
-                    style={{ fontSize: "clamp(1.7rem, 1.1rem + 2.6vw, 3rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g10)", lineHeight: 1 }}
-                  >
-                    {p.name}
-                  </h3>
-                  <span className="work-arrow ml-auto text-[20px] shrink-0" style={{ color: "var(--accent)" }}>↗</span>
-                </div>
-                <div className="work-meta pl-[calc(1.5rem+1rem)] sm:pl-[calc(1.5rem+1.5rem)]">
-                  <p className="max-w-[62ch] text-[13px]" style={{ color: "var(--g8)", lineHeight: 1.65 }}>{p.tagline}</p>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {p.stack.slice(0, 5).map((t) => (
-                      <span key={t} className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ color: "var(--g7)", border: "1px solid var(--g4)" }}>{t}</span>
-                    ))}
+      {/* Projects */}
+      <section className="wrap block">
+        <SectionHead title="Projects" href="/projects" label="All projects" />
+        <ul className="cards">
+          {PROJECTS.map((p) => (
+            <li key={p.slug}>
+              <Window tag={FILE_TAGS[p.slug] ?? p.slug.toUpperCase()}>
+                <Link href={`/projects#${p.slug}`} className="card">
+                  <div className="card-cover"><ProjectCover slug={p.slug} /></div>
+                  <div className="card-text">
+                    <h3>{p.name}</h3>
+                    <p>{p.short}</p>
                   </div>
-                </div>
-              </Link>
-            </Reveal>
+                </Link>
+              </Window>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* Photography teaser */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 pb-24">
-        <Reveal>
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <p className="font-label text-[10px] mb-3" style={{ color: "var(--g6)" }}>Shot on {CAMERA}</p>
-              <h2 className="font-display" style={{ fontSize: "clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
-                <Words text="Photography" />
-              </h2>
-            </div>
-            <Link href="/photos" className="link-dim text-[13px] mb-1.5">All photos →</Link>
-          </div>
-        </Reveal>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {PHOTO_COVERS.map(({ album, photo }, i) => (
-            <Reveal key={photo.id} delay={i * 0.06}>
-              <Link href={`/photos/${album.slug}`} className="photo-tile photo-cover" aria-label={`${album.title} photos`}>
-                <img src={photo.thumb} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
-                <span className="photo-meta font-label">{album.title}</span>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* Now + snapshot */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 pb-24 grid lg:grid-cols-2 gap-5">
-        <Reveal>
-          <div className="rounded-2xl h-full overflow-hidden" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
-            <div className="px-6 py-3.5 flex items-center gap-2.5" style={{ borderBottom: "1px solid var(--g3)" }}>
-              <span className="inline-block h-[6px] w-[6px] rounded-full" style={{ background: "var(--accent)" }} />
-              <span className="font-label text-[10px]" style={{ color: "var(--g7)" }}>now — Sep 2026</span>
-            </div>
-            {NOW.map((item) => (
-              <div key={item.label} className="flex items-baseline gap-5 px-6 py-4" style={{ borderTop: "1px solid var(--g2)" }}>
-                <span className="font-label text-[9px] w-24 shrink-0" style={{ color: "var(--accent)" }}>{item.label}</span>
-                <span className="text-[14px]" style={{ color: "var(--g10)" }}>{item.value}</span>
-              </div>
+      {/* Experience */}
+      <section className="wrap block">
+        <SectionHead title="Experience" href="/work" label="Full history" />
+        <Window tag="EXPERIENCE.LOG" className="win-wide">
+          <ol className="rows">
+            {EXPERIENCE.map((r) => (
+              <li key={r.company}>
+                <Link href={`/work#${anchor(r.company)}`} className="row">
+                  <span className="row-period">{r.period}</span>
+                  <span className="row-name">{r.company}</span>
+                  <span className="row-role">{r.role}</span>
+                </Link>
+              </li>
             ))}
-          </div>
-        </Reveal>
+          </ol>
+        </Window>
+      </section>
 
-        <Reveal delay={0.08}>
-          <div className="rounded-2xl p-6 h-full" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
-            <p className="font-label text-[10px] mb-5" style={{ color: "var(--g6)" }}>recently</p>
-            <div className="space-y-3.5">
-              {EXPERIENCE.slice(0, 3).map((r) => (
-                <div key={r.company} className="flex items-baseline justify-between gap-3">
-                  <span className="text-[14px]" style={{ color: "var(--g11)" }}>{r.company}</span>
-                  <span className="text-[11px] font-mono shrink-0" style={{ color: "var(--g6)" }}>{r.period.split("–")[0].trim()}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 pt-4 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid var(--g3)" }}>
-              {INTERESTS.map((t) => (
-                <span key={t} className="text-[11px] px-2.5 py-1 rounded-full" style={{ color: "var(--g8)", border: "1px solid var(--g4)" }}>{t}</span>
-              ))}
-            </div>
+      {/* Open source */}
+      <section className="wrap block">
+        <SectionHead title="Open source" href="/work#open-source" label="Contributions" />
+        <ul className="os-grid">
+          {OPEN_SOURCE.map((o) => (
+            <li key={o.project}>
+              <Window tag={`${o.project.split(" ").pop()!.toUpperCase()}.PRS`}>
+                <a href={o.link} target="_blank" rel="noopener" className="os">
+                  <span className="os-stats">{o.stats}</span>
+                  <h3>{o.project}</h3>
+                  <p>{o.role}. {o.detail}.</p>
+                </a>
+              </Window>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Photography */}
+      <section className="wrap block">
+        <div className="block-head">
+          <div>
+            <h2>Photography</h2>
+            <p className="block-sub">Shot on a {CAMERA}. Hover for the original.</p>
           </div>
-        </Reveal>
+          <Link href="/photos">All albums</Link>
+        </div>
+        <ul className="photos">
+          {PHOTO_COVERS.map(({ album, photo }) => (
+            <li key={photo.id}>
+              <Window tag={albumTag(album.slug)}>
+                <Link href={`/photos/${album.slug}`} className="photo" aria-label={`${album.title} photos`}>
+                  <ColorDither src={photo.thumb} alt="" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photo.thumb} alt={photo.alt} loading="lazy" decoding="async" />
+                </Link>
+              </Window>
+              <p className="photo-title">{album.title}</p>
+              <p className="photo-place">{[album.place, album.date].filter(Boolean).join(", ")}</p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Contact */}
-      <section className="relative z-10 max-w-[1160px] mx-auto px-6 pb-28">
-        <Reveal>
-          <div className="relative rounded-3xl p-10 sm:p-16 text-center overflow-hidden" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
-            <div className="pointer-events-none absolute inset-x-0 bottom-[-60%] h-[120%]" style={{ background: "radial-gradient(closest-side, var(--accent-dim), transparent 70%)" }} />
-            <h2 className="relative font-display" style={{ fontSize: "clamp(1.9rem, 1.3rem + 2.6vw, 3.25rem)", fontWeight: 400, letterSpacing: "-0.03em", color: "var(--g12)" }}>
-              <Words text="Let’s build something." />
-            </h2>
-            <p className="relative mt-4 text-[15px]" style={{ color: "var(--g8)" }}>
-              Open to co-op roles and interesting problems. Fastest way to reach me:
-            </p>
-            <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-              <button onClick={copyEmail} className="btn-fill">{copied ? "Copied ✓" : LINKS.email}</button>
-              <a href={LINKS.linkedin} target="_blank" rel="noopener" className="btn-ghost">LinkedIn ↗</a>
-              <a href={LINKS.github} target="_blank" rel="noopener" className="btn-ghost">GitHub ↗</a>
-            </div>
+      <section className="contact">
+        <AsciiField src={cover("toronto-islands")} phrases={FIELD_PHRASES} />
+        <div className="contact-scrim" />
+        <div className="wrap contact-inner">
+          <h2>Let&rsquo;s build something.</h2>
+          <p>Open to co&#8209;op roles and interesting problems. Email is the fastest way to reach me.</p>
+          <div className="actions">
+            <CopyEmail email={LINKS.email} className="pill pill-fill" />
+            <a className="pill" href={LINKS.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+            <a className="pill" href={LINKS.github} target="_blank" rel="noopener">GitHub</a>
           </div>
-        </Reveal>
+        </div>
       </section>
-
-      <footer className="relative z-10 max-w-[1160px] mx-auto px-6 pb-10">
-        <p className="font-label text-[9px]" style={{ color: "var(--g6)" }}>
-          © {new Date().getFullYear()} Aarnav Noble — press g · l · r · e
-        </p>
-      </footer>
-    </div>
+    </main>
   );
 }

@@ -1,232 +1,132 @@
-"use client";
-
-import Link from "next/link";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { EXPERIENCE, EDUCATION, LINKS } from "@/lib/data";
-import { Reveal, Words, ScrollProgress } from "@/components/motion-lib";
-import { ShaderField } from "@/components/ShaderField";
+import type { Metadata } from "next";
+import { EXPERIENCE, EDUCATION, OPEN_SOURCE } from "@/lib/data";
+import { Window } from "@/components/dither/Window";
+import { anchor } from "@/components/dither/tags";
 import { AethexDemo } from "./AethexDemo";
 import { ClimateDemo } from "./ClimateDemo";
 
-const ROLE_DEMOS = [AethexDemo, ClimateDemo];
+export const metadata: Metadata = { title: "Experience | Aarnav Noble" };
 
-const ROLE_META = [
-  {
-    domain: "Voice AI · Infrastructure",
-    tags: ["AWS/EKS", "Kubernetes", "Terraform", "WebRTC", "Python"],
-    color: "#6c8ebf",
+// Keyed by company so the demos and tags follow the role, not its position.
+const ROLE_META: Record<string, { tag: string; domain: string; tags: string[]; Demo?: () => React.JSX.Element }> = {
+  AethexAI: {
+    tag: "AETHEX.LOG",
+    domain: "Voice AI infrastructure",
+    tags: ["AWS/EKS", "Kubernetes", "Terraform", "KEDA", "WebRTC", "Python", "LLM evals"],
+    Demo: AethexDemo,
   },
-  {
+  "Environment and Climate Change Canada": {
+    tag: "ECCC.LOG",
     domain: "Climate ML",
     tags: ["PyTorch", "GNN", "XGBoost", "Satellite data"],
-    color: "#34d399",
+    Demo: ClimateDemo,
   },
-  {
-    domain: "Systems · DevOps",
-    tags: ["PXE boot", "Bash", "DSM", "IT systems"],
-    color: "#9ca3af",
+  "Toronto Transit Commission": {
+    tag: "TTC.LOG",
+    domain: "Fleet systems",
+    tags: ["Network boot", "Bash", "Config as code"],
   },
-  {
-    domain: "Embedded · Aerospace",
+  "UW Orbital": {
+    tag: "ORBITAL.LOG",
+    domain: "Embedded, aerospace",
     tags: ["C", "FreeRTOS", "STM32", "MATLAB/Simulink", "I2C"],
-    color: "#a78bfa",
   },
-  {
-    domain: "Full-stack · Shopify",
+  "Ontario Chamber of Commerce": {
+    tag: "OCC.LOG",
+    domain: "Full-stack, Shopify",
     tags: ["Go", "Kubernetes", "GraphQL", "React", "OAuth"],
-    color: "#e879a8",
   },
-];
+};
 
-function Log({ items, color }: { items: string[]; color: string }) {
-  return (
-    <div className="my-4 rounded-lg overflow-hidden flex-1" style={{ border: "1px solid var(--g3)" }}>
-      <div className="px-3.5 py-2 flex items-center gap-2" style={{ background: "var(--g2)", borderBottom: "1px solid var(--g3)" }}>
-        <div className="w-1 h-1 rounded-full" style={{ background: color }} />
-        <span className="text-[10px] uppercase tracking-[0.12em] font-mono font-medium" style={{ color: "var(--g6)" }}>
-          Shipped
-        </span>
-      </div>
-      {items.map((item, i) => (
-        <div
-          key={i}
-          className="flex items-start gap-3 px-3.5 py-2.5"
-          style={{
-            borderBottom: i < items.length - 1 ? "1px solid var(--g3)" : "none",
-            background: "var(--g1)",
-          }}
-        >
-          <span className="text-[10px] font-mono w-5 shrink-0 tabular-nums pt-px" style={{ color: "var(--g5)" }}>
-            {String(i + 1).padStart(2, "0")}
-          </span>
-          <span className="text-[12.5px] leading-[1.6]" style={{ color: "var(--g8)" }}>
-            {item}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
+function place(detail: string) {
+  return detail.split("·").pop()?.trim() ?? detail;
 }
 
 export default function Work() {
-  const [hovered, setHovered] = useState<number | null>(null);
-
   return (
-    <div className="grain relative min-h-screen overflow-x-clip">
-      <ScrollProgress />
-      <ShaderField />
+    <main className="wrap page">
+      <header className="page-head">
+        <h1 className="mega">
+          <span>Experience.</span>
+          <span className="dim">Where I&rsquo;ve built things.</span>
+        </h1>
+        <nav className="jump" aria-label="Sections on this page">
+          {EXPERIENCE.map((r) => (
+            <a key={r.company} href={`#${anchor(r.company)}`}>{r.company}</a>
+          ))}
+          <a href="#open-source">Open source</a>
+          <a href="#education">Education</a>
+        </nav>
+      </header>
 
-      {/* Nav */}
-      <motion.nav
-        initial={{ y: -16, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-40"
-      >
-        <div
-          className="max-w-[1160px] mx-auto mt-3 px-4 h-11 rounded-full flex items-center justify-between"
-          style={{ background: "rgba(10,12,10,0.42)", border: "1px solid var(--g3)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
-        >
-          <Link href="/" className="link-dim text-[13px] pl-2">← Aarnav Noble</Link>
-          <div className="flex items-center gap-6 text-[13px] pr-1">
-            <Link href="/projects" className="link-dim">Projects</Link>
-            <Link href="/photos" className="link-dim">Photos</Link>
-            <a href={LINKS.resume} target="_blank" rel="noopener" className="link-dim hidden sm:inline">Résumé</a>
-            <a href={LINKS.github} target="_blank" rel="noopener" className="link-dim hidden sm:inline">GitHub</a>
-          </div>
-        </div>
-      </motion.nav>
+      <ol className="roles">
+        {EXPERIENCE.map((r) => {
+          const meta = ROLE_META[r.company];
+          return (
+            <li key={r.company} id={anchor(r.company)} className="role">
+              <div className="role-side">
+                <p className="row-period">{r.period}</p>
+                <h2>{r.company}</h2>
+                <p className="role-title">{r.role}</p>
+                <p className="role-place">{meta ? `${meta.domain}, ` : ""}{place(r.detail)}</p>
+                {meta && (
+                  <ul className="chips" aria-label="Tools">
+                    {meta.tags.map((t) => <li key={t}>{t}</li>)}
+                  </ul>
+                )}
+              </div>
+              <div className="role-main">
+                <Window tag={meta?.tag ?? "ROLE.LOG"} title="shipped">
+                  <ul className="shipped">
+                    {r.bullets.map((b) => <li key={b}>{b}</li>)}
+                  </ul>
+                </Window>
+                {meta?.Demo && <div className="demo"><meta.Demo /></div>}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
 
-      <main className="relative z-10 max-w-[1160px] mx-auto px-6 pt-28 pb-24 w-full">
-
-        <Reveal>
-          <div className="mb-14">
-            <p className="font-label text-[10px] mb-3" style={{ color: "var(--g6)" }}>
-              Experience
-            </p>
-            <h1
-              className="font-display"
-              style={{ fontSize: "clamp(2.5rem, 1.8rem + 3vw, 4rem)", fontWeight: 400, letterSpacing: "-0.03em", lineHeight: 1, color: "var(--g12)" }}
-            >
-              <Words text="Work" />
-              <span style={{ color: "var(--accent)" }}>.</span>
-            </h1>
-          </div>
-        </Reveal>
-
-        {/* Cards */}
-        <div className="flex flex-col gap-6 mb-20">
-          {EXPERIENCE.map((role, i) => {
-            const meta = ROLE_META[i];
-            const isHovered = hovered === i;
-            return (
-              <Reveal key={role.company} delay={i * 0.05}>
-                <div
-                  style={{
-                    border: `1px solid ${isHovered ? `${meta.color}45` : "var(--g3)"}`,
-                    background: isHovered ? `${meta.color}07` : "var(--g1)",
-                    boxShadow: isHovered ? `0 0 0 1px ${meta.color}15, 0 12px 32px rgba(0,0,0,0.2)` : "none",
-                    transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
-                  }}
-                  className="rounded-2xl overflow-hidden flex flex-col"
-                  onMouseEnter={() => setHovered(i)}
-                  onMouseLeave={() => setHovered(null)}
-                >
-                  {/* Accent bar */}
-                  <div style={{
-                    height: 2,
-                    background: `linear-gradient(90deg, ${meta.color}, transparent)`,
-                    opacity: isHovered ? 1 : 0.35,
-                    transition: "opacity 0.2s",
-                  }} />
-
-                  <div className="p-6 sm:p-7 flex flex-col flex-1">
-                    {/* Domain + period */}
-                    <div className="flex items-center justify-between gap-3 mb-4">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.1em]"
-                        style={{ color: meta.color, opacity: isHovered ? 1 : 0.7, transition: "opacity 0.2s" }}>
-                        {meta.domain}
-                      </span>
-                      <span className="text-[10px] font-mono tabular-nums shrink-0" style={{ color: "var(--g5)" }}>
-                        {role.period}
-                      </span>
-                    </div>
-
-                    {/* Company */}
-                    <h2 className="font-display font-[700] text-[24px] sm:text-[26px] tracking-[-0.015em] mb-0.5" style={{ color: "var(--g12)" }}>
-                      {role.company}
-                    </h2>
-                    <p className="text-[13px] mb-5" style={{ color: "var(--g9)" }}>
-                      {role.role.split(",")[0]} · {role.detail.split("·")[0].trim()}
-                    </p>
-
-                    <Log items={role.bullets} color={meta.color} />
-
-                    {(() => { const Demo = ROLE_DEMOS[i]; return Demo ? <Demo /> : null; })()}
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {meta.tags.map(t => (
-                        <span key={t} className="text-[10px] font-mono px-1.5 py-0.5 rounded"
-                          style={{
-                            color: isHovered ? meta.color : "var(--g6)",
-                            background: isHovered ? `${meta.color}12` : "var(--g2)",
-                            border: `1px solid ${isHovered ? `${meta.color}30` : "var(--g3)"}`,
-                            transition: "color 0.2s, background 0.2s, border-color 0.2s",
-                          }}>
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
-
-        {/* Education */}
-        <Reveal>
-          <div className="pt-12" style={{ borderTop: "1px solid var(--g3)" }}>
-            <p className="font-label text-[10px] mb-6" style={{ color: "var(--g6)" }}>
-              Education
-            </p>
-
-            <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
-              <div style={{ height: 2, background: "linear-gradient(90deg, var(--g5), transparent)", opacity: 0.5 }} />
-              <div className="p-6 sm:p-7">
-                <div className="flex items-start justify-between gap-4 mb-1">
-                  <h2 className="font-display font-[700] text-[22px] tracking-tight" style={{ color: "var(--g12)" }}>
-                    {EDUCATION.school}
-                  </h2>
-                  <span className="text-[10px] font-mono shrink-0 tabular-nums" style={{ color: "var(--g5)" }}>
-                    {EDUCATION.period}
-                  </span>
-                </div>
-                <p className="text-[13px] mb-5" style={{ color: "var(--g6)" }}>
-                  {EDUCATION.degree} · {EDUCATION.location}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {EDUCATION.courses.map(c => (
-                    <span key={c} className="text-[11px] font-mono px-2 py-0.5 rounded"
-                      style={{ color: "var(--g7)", background: "var(--g2)", border: "1px solid var(--g3)" }}>
-                      {c}
-                    </span>
+      <section id="open-source" className="sub-section">
+        <h2 className="sub-head">Open source</h2>
+        <div className="os-grid">
+          {OPEN_SOURCE.map((o) => (
+            <Window key={o.project} tag={`${o.project.split(" ").pop()!.toUpperCase()}.PRS`}>
+              <div className="win-body">
+                <p className="os-stats">{o.role} / {o.stats}</p>
+                <h3>{o.project}</h3>
+                <p className="win-tagline">{o.detail}.</p>
+                <div className="term">
+                  {o.bullets.map((b) => (
+                    <p key={b}><span aria-hidden="true">&gt;</span> {b}</p>
                   ))}
                 </div>
+                <p className="win-stack">{o.tags.join(" / ")}</p>
               </div>
+              <div className="win-foot">
+                <a href={o.link} target="_blank" rel="noopener">Pull requests</a>
+              </div>
+            </Window>
+          ))}
+        </div>
+      </section>
+
+      <section id="education" className="sub-section">
+        <h2 className="sub-head">Education</h2>
+        <Window tag="WATERLOO.EDU">
+          <div className="win-body edu">
+            <div>
+              <p className="row-period">{EDUCATION.period}</p>
+              <h3>{EDUCATION.school}</h3>
+              <p className="role-title">{EDUCATION.degree}, {EDUCATION.location}</p>
             </div>
+            <ul className="chips" aria-label="Coursework">
+              {EDUCATION.courses.map((c) => <li key={c}>{c}</li>)}
+            </ul>
           </div>
-        </Reveal>
-
-      </main>
-
-      <footer className="relative z-10 max-w-[1160px] mx-auto px-6 pb-10 w-full">
-        <p className="font-label text-[9px]" style={{ color: "var(--g6)" }}>
-          © {new Date().getFullYear()} Aarnav Noble
-        </p>
-      </footer>
-    </div>
+        </Window>
+      </section>
+    </main>
   );
 }

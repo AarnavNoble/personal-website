@@ -1,7 +1,7 @@
 export const LINKS = {
   github: "https://github.com/AarnavNoble",
   linkedin: "https://linkedin.com/in/aarnav-noble",
-  email: "aarnavnoble14@gmail.com",
+  email: "anoble@uwaterloo.ca",
   resume: "/AarnavNoble-Resume.pdf",
 };
 
@@ -12,12 +12,13 @@ export const EXPERIENCE = [
     role: "Member of Technical Staff Intern",
     period: "Jan 2026 – Apr 2026",
     bullets: [
-      "Built the platform's public API and Python SDK from scratch, with 30+ endpoints for mid-call session control",
-      "Managed the production AWS/EKS platform on Kubernetes, Terraform, and CI/CD across 500+ pods",
-      "Hardened the sub-500ms voice pipeline to 75+ concurrent calls, fixing state races and null crashes under load",
-      "Designed a 5-phase interrupt state machine spanning 3 transports, ending dropped speech and state corruption",
-      "Rebuilt agent-document RAG across ingestion, concurrency, cross-turn dedup, and grounding over 10K+ chunks",
-      "Built a WebRTC call simulator that runs 200+ scripted call scenarios in CI, interrupts included",
+      "Owned the public API and Python SDK end to end: 100+ endpoints, including control of calls already in progress",
+      "Ran the production AWS/EKS platform on Kubernetes, Terraform, and CI/CD at 500+ pods, with KEDA autoscaling that pre-warms GPU workers when a call connects instead of waiting out a 5-minute cold start",
+      "Held streaming latency under 500ms at 75+ concurrent calls on a platform taking 15K+ calls a day",
+      "Built eval infrastructure for the voice agent: an LLM judge scoring 270 real calls, Langfuse tracing, and a TTS pipeline gated on the results",
+      "Designed a 5-phase interrupt state machine across 3 transports that removed the failures behind roughly 80% of interrupts",
+      "Rebuilt agent RAG for launch with thread-safe ingestion, dedup across turns, and grounding over 10K+ chunks",
+      "Replaced manual regression checks with a Monte Carlo and WebRTC call simulator that runs 1,400 scripted calls",
     ],
   },
   {
@@ -26,8 +27,9 @@ export const EXPERIENCE = [
     role: "AI/ML Developer",
     period: "May 2025 – Aug 2025",
     bullets: [
-      "Designed and built a PyTorch GNN, 4 message-passing layers over a 10K+ node basin graph",
+      "Designed and trained a PyTorch GNN, 4 message-passing layers over a 10K+ node basin graph",
       "Beat gradient-boosted baselines by 85%, replacing hand-built spatial features with learned graph structure",
+      "Ruled out spatial overfitting with region-holdout cross-validation and a 100+ run hyperparameter sweep",
       "Extended usable output 5x by generating forecasts at graph nodes with no observed data",
       "Engineered 50+ spatial-temporal features and cut a full run from hours to minutes by vectorizing and parallelizing",
       "Led ML on a 6-person research team from architecture to eval, presenting results toward a publication",
@@ -36,12 +38,12 @@ export const EXPERIENCE = [
   {
     company: "Toronto Transit Commission",
     detail: "Toronto, Ontario",
-    role: "Software Developer",
+    role: "Software Engineering Intern",
     period: "Sep 2024 – Dec 2024",
     bullets: [
-      "Built an idempotent deployment system that drove 10K+ devices to a declared software state from one config",
-      "Automated zero-touch OS provisioning with network-boot and Bash pipelines, cutting per-device setup ~50%",
-      "Wrote Python/Bash orchestration for staged patch and driver rollouts across 2K+ machines, with auto-retry on failure",
+      "Built config-as-code deployment that holds a 10K+ device fleet to one declared software state",
+      "Automated zero-touch bare-metal provisioning over network boot and Bash, roughly halving setup time per device",
+      "Wrote staged patch and driver rollouts across 2K+ machines that retry failed hosts automatically",
     ],
   },
   {
@@ -60,10 +62,41 @@ export const EXPERIENCE = [
     role: "Software Developer",
     period: "Jan 2024 – Apr 2024",
     bullets: [
-      "Built 10+ configurable storefront widgets with a JSON-schema settings layer, customized by non-devs with no code",
-      "Built a Dockerized Go webhook service on Kubernetes that synced Shopify events into storefronts via GraphQL",
-      "Modeled 15+ Shopify Metaobject types as a custom data layer, bound to live storefront content",
-      "Secured the embedded app with session-token auth, scoped OAuth, and HMAC-verified webhooks against forged events",
+      "Built 10+ reusable React storefront components with schema-driven settings that non-developers edit in a visual editor",
+      "Wrote a Dockerized Go service on Kubernetes that feeds external data into 15+ Shopify Metaobject types bound to live content",
+      "Locked down the embedded app with session-token auth, scoped OAuth, and HMAC verification on every webhook",
+    ],
+  },
+];
+
+export const OPEN_SOURCE = [
+  {
+    project: "vLLM AIBrix",
+    detail: "vLLM's Kubernetes control plane for LLM serving: routing, autoscaling, KV cache",
+    role: "Top-20 contributor",
+    stats: "15 merged PRs",
+    link: "https://github.com/vllm-project/aibrix/pulls?q=is%3Apr+author%3AAarnavNoble",
+    color: "#E8A33D",
+    tags: ["Go", "Kubernetes", "Redis", "Prometheus"],
+    bullets: [
+      "Moved prefill/decode admission ahead of the prefill leg, so a burst against a full decode pod runs 1 GPU prefill instead of 16 that get thrown away",
+      "Made the KPA autoscaler keep its panic state between reconciles, so a traffic spike holds peak capacity for up to 180s instead of none",
+      "Aged stale pods out of the prefix-cache index, so routing stops favouring pods that already evicted the matching KV cache",
+      "Fixed least-latency routing ignoring queue time, and streamed requests being metered and closed out on their first usage chunk instead of their last",
+      "Plus fixes to autoscaler status reporting, per-autoscaler state cleanup, and annotation validation",
+    ],
+  },
+  {
+    project: "FastMCP",
+    detail: "Python framework for building MCP servers and clients",
+    role: "Contributor",
+    stats: "5 PRs in review",
+    link: "https://github.com/PrefectHQ/fastmcp/pulls?q=is%3Apr+author%3AAarnavNoble",
+    color: "#34d399",
+    tags: ["Python", "MCP", "OpenAPI", "JSON Schema"],
+    bullets: [
+      "Fixes to OpenAPI-to-tool schema generation: $ref pointers into component schemas, readOnly properties, and shared references",
+      "Proxies now pass prompt argument titles and the client's sampling result through unchanged",
     ],
   },
 ];
@@ -71,14 +104,17 @@ export const EXPERIENCE = [
 export const EDUCATION = {
   school: "University of Waterloo",
   degree: "B.ASc. Honours Computer Engineering",
-  period: "2023 – 2028 (expected)",
+  period: "Sep 2023 – Apr 2028 (expected)",
   location: "Waterloo, Ontario",
   courses: [
+    "Operating Systems",
+    "Computer Architecture",
+    "Compilers",
+    "Databases",
+    "Computer Networks",
     "Data Structures & Algorithms",
-    "Systems Programming & Concurrency",
-    "Digital Circuits (VHDL)",
-    "Embedded Microprocessor Systems",
-    "Signals & Systems",
+    "Concurrency",
+    "Probability & Statistics",
   ],
 };
 
@@ -86,7 +122,13 @@ const PROJECTS_RAW = [
   {
     slug: "roam",
     name: "Roam",
+    short: "Plans a day of travel where a ranker and a solver build the route, not an LLM.",
     tagline: "AI travel planner where the route is ranked and solved, not written by an LLM: learning-to-rank, route optimization, and a fallback for every upstream.",
+    highlights: [
+      "The ranker and solver choose and order real places; the LLM only narrates, on 74% fewer tokens",
+      "Profiling showed 82% of a 41s request waiting on map queries; batching and caching brought repeat requests to 2s",
+      "Keeps serving through LLM and map outages, verified by 36 injected failures across 5 upstream APIs",
+    ],
     description:
       "Give it a city, a starting point, a number of hours, and a list of interests; it returns a day plan with stops ordered and timed. Places come from OpenStreetMap, a LightGBM ranker picks which ones to visit, and an OR-Tools solver decides the order and arrival times. The LLM only writes prose keyed by stop number, which the server joins onto the route, so names, coordinates, and times never pass through model output. Every stage that depends on an outside service has a fallback, and each response lists the ones it used. Reworking the request path took median latency from 40.7 s to 17.7 s on a first request and 2.0 s on a repeat, and a tool-calling agent edits a saved trip in plain language.",
     github: "https://github.com/AarnavNoble/roam",
@@ -157,7 +199,14 @@ const PROJECTS_RAW = [
   {
     slug: "llm-engine",
     name: "LLM Engine",
+    short: "An LLM inference server written from scratch in C++ and CUDA.",
     tagline: "LLM inference server written from scratch in C++ and CUDA: paged KV cache, continuous batching, prefix caching, and an OpenAI-compatible streaming API. No PyTorch at runtime.",
+    highlights: [
+      "Matches PyTorch layer by layer across all 24 layers, on two model architectures",
+      "Continuous batching cuts time to first token 53x over static batching on an A40; paged KV cache lifts slot use from 55% to 99%",
+      "8 hand-written CUDA kernels; profiling put 88% of a decode step in attention, and sharing K/V across GQA groups made it 1.6x faster",
+      "Serves a live view of its own scheduler: requests joining a running batch, shared prefixes, preemption under memory pressure",
+    ],
     description:
       "A small serving engine for Llama-architecture models (Qwen2.5-0.5B, TinyLlama-1.1B) built from the same parts production engines use. Weights are read straight from safetensors, the tokenizer parses tokenizer.json directly, and the CPU forward pass is checked layer by layer against Hugging Face on 22 prompts. The CUDA backend keeps the whole forward pass on the device, with hand-written kernels for embedding, RMSNorm, RoPE, the KV cache write, and paged decode attention, and is gated against the CPU path as its oracle. On an A40, continuous batching cuts time to first token 53x over static batching and prefix caching cuts it 14.4x on a shared system prompt. Every published number names the machine it was measured on, and CI fails if a figure quoted in the docs disagrees with the benchmark data.",
     github: "https://github.com/AarnavNoble/llm-engine",
@@ -222,6 +271,7 @@ const PROJECTS_RAW = [
   {
     slug: "dothraki-asr",
     name: "Dothraki ASR",
+    short: "Speech recognition for a fictional language with no training data.",
     tagline: "Zero-shot ASR for a constructed language with zero training data; phoneme matching against the Dothraki lexicon.",
     description:
       "Dothraki was invented by linguist David J. Peterson for HBO's Game of Thrones. It has a documented phonology and a 4,000-word lexicon, but zero representation in any ASR training set. This project tests whether multilingual Whisper can produce useful output when run zero-shot on Dothraki audio, and whether that output can be mapped back to real Dothraki words via phoneme matching.",
@@ -270,7 +320,13 @@ const PROJECTS_RAW = [
   {
     slug: "vestige",
     name: "Vestige",
+    short: "Turns production AI agent failures into free, deterministic CI tests.",
     tagline: "Observability and eval platform for production AI agents: replays real failures as deterministic CI tests, at zero model API cost.",
+    highlights: [
+      "Go ingest takes 30K+ agent spans/sec and lost none of them through a ClickHouse outage",
+      "Replays a 50-span agent failure from recorded fixtures in under 5s, with zero model calls",
+      "Gates PRs on replayed regression tests in a no-network sandbox, with a 100-pair test proving tenants stay isolated",
+    ],
     description:
       "Production AI agents fail in ways unit tests don't catch: a prompt edit changes tone, a tool call returns something unexpected, and nobody notices until a customer does. Vestige instruments every LLM call, tool call, and transitive HTTP request in an agent run via OpenTelemetry, then lets you promote any recorded run into a regression test. Replay reconstructs that failure from content-hashed fixtures instead of live model calls, so a full test suite re-run costs nothing and never touches a real provider. Replays run in a Docker sandbox with no network, a read-only filesystem, and none of the worker's credentials. A GitHub Actions gate runs this on every pull request and blocks the merge on regression, and when an output changes, an LLM judge tells the reviewer whether it is a rewording or a real difference without ever passing the test itself.",
     github: null,
@@ -323,6 +379,7 @@ const PROJECTS_RAW = [
   {
     slug: "flame-forecaster",
     name: "Flame Forecaster",
+    short: "Predicts how much of Alberta a wildfire will burn.",
     tagline: "Wildfire severity prediction for Alberta, built with a 4-person team for an Ernst & Young hackathon.",
     description:
       "Alberta wildfire records (fire location, cause, weather, spread rate, ~22,900 rows) broken down by FSA region to find the areas most vulnerable to severe fires, then modeled to predict final burned area. Linear and ridge regression collapsed on this data (R² = -0.14, essentially no signal); the team swept SVR, Random Forest, and Kernel Ridge before landing on a tuned XGBoost regressor validated with repeated k-fold cross-validation, cutting mean squared error by roughly 97% over the linear baseline.",
