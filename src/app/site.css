@@ -1266,6 +1266,16 @@ html:has(.dr) {
 .dr .lightbox-step.prev { left: 16px; }
 .dr .lightbox-step.next { right: 16px; }
 
+/* The photo pages show the photographs themselves, not dithered copies. */
+.dr .photo.plain img {
+  opacity: 1;
+  transition: transform 0.4s;
+}
+
+.dr .photo.plain:hover img {
+  transform: scale(1.02);
+}
+
 /* Now + recently */
 .dr .split {
   display: grid;

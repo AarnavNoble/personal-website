@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ALBUMS, CAMERA } from "@/lib/photos";
-import { ColorDither } from "@/components/dither/ColorDither";
 import { Window } from "@/components/dither/Window";
 import { albumTag } from "@/components/dither/tags";
 
@@ -15,7 +14,7 @@ export default function Photos() {
           <span>Photos.</span>
           <span className="dim">Shot on a {CAMERA}.</span>
         </h1>
-        <p className="page-sub">Hover a frame for the original, open an album for every shot.</p>
+        <p className="page-sub">Open an album for every shot.</p>
       </header>
 
       <ul className="albums">
@@ -25,8 +24,7 @@ export default function Photos() {
           return (
             <li key={album.slug}>
               <Window tag={albumTag(album.slug)}>
-                <Link href={`/photos/${album.slug}`} className="photo" aria-label={`${album.title}, ${count} photos`}>
-                  <ColorDither src={cover.thumb} alt="" />
+                <Link href={`/photos/${album.slug}`} className="photo plain" aria-label={`${album.title}, ${count} photos`}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={cover.thumb} alt={cover.alt} loading="lazy" decoding="async" />
                 </Link>

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { CAMERA, type Album } from "@/lib/photos";
-import { ColorDither } from "@/components/dither/ColorDither";
 import { Window } from "@/components/dither/Window";
 
 function frameTag(id: string) {
@@ -86,14 +85,13 @@ export function AlbumView({ album, prev, next }: { album: Album; prev: Album; ne
             <Window tag={frameTag(photo.id)}>
               <button
                 type="button"
-                className="photo frame"
+                className="photo frame plain"
                 style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
                 onClick={() => setOpen(j)}
                 aria-label={`Open ${photo.alt}`}
               >
-                <ColorDither src={photo.thumb} alt="" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo.thumb} alt="" loading="lazy" decoding="async" />
+                <img src={photo.thumb} alt={photo.alt} loading="lazy" decoding="async" />
               </button>
             </Window>
             {photo.settings && <p className="frame-settings">{photo.settings}</p>}
