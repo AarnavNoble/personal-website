@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { EXPERIENCE, EDUCATION, LINKS } from "@/lib/data";
+import { EXPERIENCE, EDUCATION, OPEN_SOURCE, LINKS } from "@/lib/data";
 import { Reveal, Words, ScrollProgress } from "@/components/motion-lib";
 import { ShaderField } from "@/components/ShaderField";
 import { AethexDemo } from "./AethexDemo";
@@ -14,7 +14,7 @@ const ROLE_DEMOS = [AethexDemo, ClimateDemo];
 const ROLE_META = [
   {
     domain: "Voice AI · Infrastructure",
-    tags: ["AWS/EKS", "Kubernetes", "Terraform", "WebRTC", "Python"],
+    tags: ["AWS/EKS", "Kubernetes", "Terraform", "KEDA", "WebRTC", "Python", "LLM evals"],
     color: "#6c8ebf",
   },
   {
@@ -185,6 +185,50 @@ export default function Work() {
             );
           })}
         </div>
+
+        {/* Open source */}
+        <Reveal>
+          <div className="pt-12 mb-20" style={{ borderTop: "1px solid var(--g3)" }}>
+            <p className="font-label text-[10px] mb-6" style={{ color: "var(--g6)" }}>
+              Open source
+            </p>
+
+            <div className="flex flex-col gap-6">
+              {OPEN_SOURCE.map(os => (
+                <div key={os.project} className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
+                  <div style={{ height: 2, background: `linear-gradient(90deg, ${os.color}, transparent)`, opacity: 0.5 }} />
+                  <div className="p-6 sm:p-7">
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      <span className="text-[10px] font-mono uppercase tracking-[0.1em]" style={{ color: os.color, opacity: 0.8 }}>
+                        {os.role} · {os.stats}
+                      </span>
+                      <a href={os.link} target="_blank" rel="noopener" className="link-dim text-[12px] shrink-0">
+                        Pull requests ↗
+                      </a>
+                    </div>
+                    <h2 className="font-display font-[700] text-[24px] sm:text-[26px] tracking-[-0.015em] mb-0.5" style={{ color: "var(--g12)" }}>
+                      {os.project}
+                    </h2>
+                    <p className="text-[13px] mb-5" style={{ color: "var(--g9)" }}>
+                      {os.detail}
+                    </p>
+
+                    <Log items={os.bullets} color={os.color} />
+
+                    <div className="flex flex-wrap gap-1.5">
+                      {os.tags.map(t => (
+                        <span key={t} className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                          style={{ color: "var(--g6)", background: "var(--g2)", border: "1px solid var(--g3)" }}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
 
         {/* Education */}
         <Reveal>

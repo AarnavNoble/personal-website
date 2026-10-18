@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { LINKS } from "@/lib/data";
 
 type Cmd = { group: string; id: string; label: string; hint?: string; action: () => void };
 
@@ -14,7 +15,7 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const copyEmail = useCallback(() => {
-    navigator.clipboard.writeText("aarnavnoble14@gmail.com").then(() => {
+    navigator.clipboard.writeText(LINKS.email).then(() => {
       setCopied(true);
       setTimeout(() => { setCopied(false); setOpen(false); }, 900);
     });

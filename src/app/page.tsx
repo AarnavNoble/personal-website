@@ -10,8 +10,8 @@ import { ShaderField } from "@/components/ShaderField";
 
 const SKILLS = [
   "Python", "Go", "TypeScript", "C / C++", "React", "Next.js", "FastAPI",
-  "PyTorch", "Kubernetes", "Docker", "Terraform", "AWS", "PostgreSQL",
-  "ClickHouse", "GraphQL", "WebRTC", "OpenTelemetry", "Linux",
+  "CUDA", "PyTorch", "Kubernetes", "Docker", "Terraform", "AWS", "PostgreSQL", "Redis",
+  "ClickHouse", "Prometheus", "GraphQL", "WebRTC", "OpenTelemetry", "Linux",
 ];
 
 const NOW = [
@@ -227,7 +227,7 @@ export default function Home() {
           <div className="rounded-2xl h-full overflow-hidden" style={{ border: "1px solid var(--g3)", background: "var(--g1)" }}>
             <div className="px-6 py-3.5 flex items-center gap-2.5" style={{ borderBottom: "1px solid var(--g3)" }}>
               <span className="inline-block h-[6px] w-[6px] rounded-full" style={{ background: "var(--accent)" }} />
-              <span className="font-label text-[10px]" style={{ color: "var(--g7)" }}>now — Sep 2026</span>
+              <span className="font-label text-[10px]" style={{ color: "var(--g7)" }}>now — Oct 2026</span>
             </div>
             {NOW.map((item) => (
               <div key={item.label} className="flex items-baseline gap-5 px-6 py-4" style={{ borderTop: "1px solid var(--g2)" }}>

@@ -130,6 +130,17 @@ export default function Projects() {
                     {project.tagline}
                   </p>
 
+                  {project.highlights && (
+                    <ul className="ml-9 mt-3 space-y-1.5">
+                      {project.highlights.map(h => (
+                        <li key={h} className="flex items-start gap-2.5 text-[13px] leading-[1.6]" style={{ color: "var(--g8)" }}>
+                          <span className="w-1 h-1 rounded-full shrink-0 mt-[9px]" style={{ background: accent }} />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
                   <div className="ml-9">
                     <Pipeline steps={project.pipeline} accent={accent} />
 
