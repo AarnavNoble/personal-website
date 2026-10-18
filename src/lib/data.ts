@@ -122,6 +122,7 @@ const PROJECTS_RAW = [
   {
     slug: "roam",
     name: "Roam",
+    short: "Plans a day of travel where a ranker and a solver build the route, not an LLM.",
     tagline: "AI travel planner where the route is ranked and solved, not written by an LLM: learning-to-rank, route optimization, and a fallback for every upstream.",
     highlights: [
       "The ranker and solver choose and order real places; the LLM only narrates, on 74% fewer tokens",
@@ -198,6 +199,7 @@ const PROJECTS_RAW = [
   {
     slug: "llm-engine",
     name: "LLM Engine",
+    short: "An LLM inference server written from scratch in C++ and CUDA.",
     tagline: "LLM inference server written from scratch in C++ and CUDA: paged KV cache, continuous batching, prefix caching, and an OpenAI-compatible streaming API. No PyTorch at runtime.",
     highlights: [
       "Matches PyTorch layer by layer across all 24 layers, on two model architectures",
@@ -269,6 +271,7 @@ const PROJECTS_RAW = [
   {
     slug: "dothraki-asr",
     name: "Dothraki ASR",
+    short: "Speech recognition for a fictional language with no training data.",
     tagline: "Zero-shot ASR for a constructed language with zero training data; phoneme matching against the Dothraki lexicon.",
     description:
       "Dothraki was invented by linguist David J. Peterson for HBO's Game of Thrones. It has a documented phonology and a 4,000-word lexicon, but zero representation in any ASR training set. This project tests whether multilingual Whisper can produce useful output when run zero-shot on Dothraki audio, and whether that output can be mapped back to real Dothraki words via phoneme matching.",
@@ -317,6 +320,7 @@ const PROJECTS_RAW = [
   {
     slug: "vestige",
     name: "Vestige",
+    short: "Turns production AI agent failures into free, deterministic CI tests.",
     tagline: "Observability and eval platform for production AI agents: replays real failures as deterministic CI tests, at zero model API cost.",
     highlights: [
       "Go ingest takes 30K+ agent spans/sec and lost none of them through a ClickHouse outage",
@@ -375,6 +379,7 @@ const PROJECTS_RAW = [
   {
     slug: "flame-forecaster",
     name: "Flame Forecaster",
+    short: "Predicts how much of Alberta a wildfire will burn.",
     tagline: "Wildfire severity prediction for Alberta, built with a 4-person team for an Ernst & Young hackathon.",
     description:
       "Alberta wildfire records (fire location, cause, weather, spread rate, ~22,900 rows) broken down by FSA region to find the areas most vulnerable to severe fires, then modeled to predict final burned area. Linear and ridge regression collapsed on this data (R² = -0.14, essentially no signal); the team swept SVR, Random Forest, and Kernel Ridge before landing on a tuned XGBoost regressor validated with repeated k-fold cross-validation, cutting mean squared error by roughly 97% over the linear baseline.",

@@ -30,6 +30,8 @@ export function AsciiField({ src, phrases }: Props) {
     let cw = 0;
     let ch = 0;
     let light: Float32Array = new Float32Array(0);
+    // Quantised colour of the photo at each lit cell, as a CSS colour string.
+    let tint: (string | null)[] = [];
     let pointer: { c: number; r: number } | null = null;
     let timer = 0;
     let visible = true;
@@ -53,6 +55,7 @@ export function AsciiField({ src, phrases }: Props) {
     // Brightness of the photo at each cell inside REGION, faded at its edges.
     function sample() {
       light = new Float32Array(cols * rows);
+      tint = new Array(cols * rows).fill(null);
       if (!img.complete || !img.naturalWidth) return;
       const rc0 = Math.floor(cols * REGION.x);
       const rr0 = Math.floor(rows * REGION.y);
@@ -79,7 +82,15 @@ export function AsciiField({ src, phrases }: Props) {
           const v = r / rrh;
           const edge = Math.min(u, 1 - u, v, 1 - v) / 0.18;
           const fade = Math.min(1, edge) ** 1.5;
-          light[(rr0 + r) * cols + rc0 + c] = Math.min(1, Math.max(0, (l - 0.28) * 1.7)) * fade;
+          const cell = (rr0 + r) * cols + rc0 + c;
+          light[cell] = Math.min(1, Math.max(0, (l - 0.28) * 1.7)) * fade;
+          // Colour-dither the tint too, lifted toward full brightness so it reads on black.
+          const t = threshold(c, r);
+          const q = (k: number) => {
+            const v = Math.min(1, (px[i + k] / 255) * 0.75 + 0.3);
+            return Math.round((Math.min(3, Math.floor(v * 3 + t)) / 3) * 255);
+          };
+          tint[cell] = `rgb(${q(0)},${q(1)},${q(2)})`;
         }
       }
     }
@@ -89,9 +100,10 @@ export function AsciiField({ src, phrases }: Props) {
       ctx.clearRect(0, 0, rect.width, rect.height);
       ctx.font = font;
       ctx.textBaseline = "top";
-      // Bucket cells by brightness so fillStyle changes a handful of times per frame.
+      // Bucket cells by brightness and tint so fillStyle changes a handful of times per frame.
       const levels: [number, number, string][][] = [[], [], [], []];
       const alpha = [0.08, 0.38, 0.66, 0.96];
+      const tinted = new Map<string, [number, number, string][]>();
       const len = stream.length;
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -114,13 +126,26 @@ export function AsciiField({ src, phrases }: Props) {
             }
           }
           if (glyph === " ") continue;
-          levels[level].push([c * cw, r * ch, glyph]);
+          const colour = level >= 2 ? tint[r * cols + c] : null;
+          if (colour) {
+            const key = `${colour}|${level}`;
+            let bucket = tinted.get(key);
+            if (!bucket) tinted.set(key, (bucket = []));
+            bucket.push([c * cw, r * ch, glyph]);
+          } else levels[level].push([c * cw, r * ch, glyph]);
         }
       }
       for (let l = 0; l < levels.length; l++) {
         ctx.fillStyle = `rgba(237,237,237,${alpha[l]})`;
         for (const [x, y, g] of levels[l]) ctx.fillText(g, x, y);
       }
+      for (const [key, cells] of tinted) {
+        const [colour, level] = key.split("|");
+        ctx.globalAlpha = alpha[Number(level)];
+        ctx.fillStyle = colour;
+        for (const [x, y, g] of cells) ctx.fillText(g, x, y);
+      }
+      ctx.globalAlpha = 1;
     }
 
     function loop() {

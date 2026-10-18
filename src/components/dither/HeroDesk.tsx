@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
-import { DitherPhoto } from "./DitherPhoto";
+import { ColorDither } from "./ColorDither";
 import { Window } from "./Window";
 
 // Numbers are from llm-engine's docs/results.md (CUDA backend, NVIDIA A40).
@@ -104,6 +104,7 @@ type Pos = { x: number; y: number };
 
 export function HeroDesk({ photo, scan }: { photo: string; scan: string }) {
   const [scale, setScale] = useState(3);
+  const [levels, setLevels] = useState(4);
   const [offsets, setOffsets] = useState<Record<string, Pos>>({});
   const drag = useRef<{ id: string; sx: number; sy: number; ox: number; oy: number } | null>(null);
 
@@ -141,7 +142,7 @@ export function HeroDesk({ photo, scan }: { photo: string; scan: string }) {
     <div className="desk">
       <Window tag="SCAN.RAW" className="w-scan" style={at("scan")} id="scan">
         <div className="w-photo">
-          <DitherPhoto src={scan} alt="" cell={4} />
+          <ColorDither src={scan} alt="" cell={4} levels={3} />
         </div>
       </Window>
 
@@ -155,24 +156,39 @@ export function HeroDesk({ photo, scan }: { photo: string; scan: string }) {
 
       <Window tag="LIONS_HEAD.RAW" className="w-photo-win" style={at("photo")} id="photo">
         <div className="w-photo">
-          <DitherPhoto src={photo} alt="Lion's Head, photographed by Aarnav" cell={scale} />
+          <ColorDither src={photo} alt="Lion's Head, photographed by Aarnav" cell={scale} levels={levels} />
         </div>
       </Window>
 
       <Window tag="CTRL.SYS" title="dither" className="w-ctrl" style={at("ctrl")} onBarPointerDown={onBarDown} id="ctrl">
-        <label className="ctrl">
-          <span>Scale</span>
-          <span className="ctrl-value">{scale}</span>
-          <input
-            type="range"
-            min={2}
-            max={8}
-            step={1}
-            value={scale}
-            onChange={(e) => setScale(Number(e.target.value))}
-            aria-label="Dither scale for the photo"
-          />
-        </label>
+        <div className="ctrl">
+          <label>
+            <span>Scale</span>
+            <span className="ctrl-value">{scale}px</span>
+            <input
+              type="range"
+              min={2}
+              max={10}
+              step={1}
+              value={scale}
+              onChange={(e) => setScale(Number(e.target.value))}
+              aria-label="Dither cell size for the photo"
+            />
+          </label>
+          <label>
+            <span>Palette</span>
+            <span className="ctrl-value">{levels ** 3} colours</span>
+            <input
+              type="range"
+              min={2}
+              max={6}
+              step={1}
+              value={levels}
+              onChange={(e) => setLevels(Number(e.target.value))}
+              aria-label="Colour steps per channel for the photo"
+            />
+          </label>
+        </div>
       </Window>
     </div>
   );
