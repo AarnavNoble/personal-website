@@ -3,6 +3,9 @@ import { ALBUMS } from "@/lib/photos";
 // File-name tags shown above each window.
 export const FILE_TAGS: Record<string, string> = {
   vestige: "VESTIGE.GO",
+  "oeb-rate-case-agent": "RATE_CASE.PDF",
+  "script-assignment": "LEASES.SQL",
+  "interrupt-lab": "MACHINE.TS",
   "llm-engine": "ENGINE.CU",
   roam: "ROAM.PY",
   "dothraki-asr": "DOTHRAKI.IPYNB",

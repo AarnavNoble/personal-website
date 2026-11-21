@@ -429,10 +429,213 @@ const PROJECTS_RAW = [
       ],
     },
   },
+  {
+    slug: "oeb-rate-case-agent",
+    name: "OEB Rate-Case Agent",
+    short: "Answers questions about Ontario energy rate cases and cites the exact filing page.",
+    tagline: "Research agent over Ontario Energy Board rate-case filings: every claim links to the page it came from, and is checked against the pages the agent actually read.",
+    highlights: [
+      "Ingests two full rate cases, 340 PDFs and 41,867 pages from Toronto Hydro and Hydro One, through a Temporal workflow into Postgres + pgvector",
+      "On 470 questions taken from the utility's own interrogatory responses, the cited section is in the top 5 for 68% of questions against 16% for random chunks",
+      "On 20 held-out questions the agent cited the section the utility itself cited for 18, and made 0 citations to pages it never retrieved",
+    ],
+    description:
+      "A single rate case is hundreds of PDFs and tens of thousands of pages: pre-filed evidence, interrogatories from intervenors and OEB staff, the utility's responses, settlements and decisions. Answering \"what is the utility proposing and why\" means finding the right exhibit, tab, schedule and page and quoting it exactly. This project ingests whole cases, retrieves at page level, and answers with an agent that must cite pages it actually read or say the evidence isn't there. The eval takes its ground truth from the case itself: the utility's interrogatory responses point to the evidence that answers them, and a leakage control keeps those responses out of the index, since without it the answer is in the top 5 for 66% of questions. It runs locally, since it needs the ~1.2 GB of downloaded filings, Postgres, Temporal and a Claude login; the results, transcripts and a demo recording are committed to the repo.",
+    github: "https://github.com/AarnavNoble/oeb-rate-case-agent",
+    demo: null,
+    stack: ["Python", "Temporal", "PostgreSQL", "pgvector", "FastAPI", "MCP", "Claude Code", "sentence-transformers", "PyMuPDF", "Next.js"],
+    pipeline: [
+      {
+        step: "Crawl",
+        tech: "OEB RDS JSON API",
+        detail:
+          "Lists each case through the regulator's document search API and downloads every record through one polite fetcher: at most one request every 1.1 s per host, every response cached on disk. RDS silently truncates large files by exactly 80 KiB, so files are fetched in 8 MiB ranges and the total must match the size the server reports.",
+      },
+      {
+        step: "Ingestion",
+        tech: "Temporal workflows",
+        detail:
+          "One child workflow per document runs download, parse and chunk, then embed. Each activity is idempotent, so re-running a case skips finished documents, and network-bound and CPU-bound work run on separate task queues so a slow download never blocks parsing.",
+      },
+      {
+        step: "Parse & Chunk",
+        tech: "PyMuPDF + pdfplumber",
+        detail:
+          "Extracts text per page and turns each page's header block (Exhibit / Tab / Schedule / Page) into its citation. Chunks follow headings, target 500–800 tokens, never cross an exhibit boundary, and keep their page range; embeddings use bge-small locally.",
+      },
+      {
+        step: "Retrieval",
+        tech: "full-text · vector · hybrid (RRF)",
+        detail:
+          "Postgres full-text search, cosine search over pgvector, and reciprocal rank fusion of the two. Utilities re-file updated exhibits, so 16% of Toronto Hydro's chunks are verbatim copies; exact and near copies are collapsed so re-filings don't crowd out other passages.",
+      },
+      {
+        step: "Cited Agent",
+        tech: "Claude Code headless + MCP",
+        detail:
+          "The agent's only tools come from an MCP server: search, fetch_page, and read-only SQL over two table views. Every claim must carry a citation token copied from a tool result, and tokens are checked against the pages the agent actually saw.",
+      },
+      {
+        step: "Figure Check",
+        tech: "source panel",
+        detail:
+          "If none of a claim's figures appear on the cited page, the UI says so and checks the pages on either side. It caught off-by-page citations the citation check alone passed, such as p. 92 instead of p. 94 in Toronto Hydro's capital expenditure plan.",
+      },
+      {
+        step: "Evaluation",
+        tech: "interrogatory-based IR eval",
+        detail:
+          "470 labelled questions parsed from the utility's interrogatory responses, scored at section/schedule level against random-chunk and label-prior baselines. Retrieval runs on pre-filed evidence only, record locations are stripped from the questions, and an ablation shows what the leak would do.",
+      },
+    ],
+    sampleOutput: {
+      label: "Eval results (EB-2023-0195, section/schedule level)",
+      steps: [
+        { label: "Corpus", value: "340 PDFs · 41,867 pages · 2 cases" },
+        { label: "Recall@5", value: "0.68 vector · 0.66 hybrid · 0.54 full-text · 0.16 random" },
+        { label: "Leakage ablation", value: "answer in top 5 for 66% of questions without the evidence-only filter" },
+        { label: "Agent citations", value: "18/20 cite a section the utility cited · 0 pages never retrieved" },
+        { label: "Judge", value: "19/20 correct or partially correct" },
+      ],
+    },
+  },
+  {
+    slug: "script-assignment",
+    name: "Script Assignment",
+    short: "Gives each recording script to exactly one contributor and takes abandoned ones back on its own.",
+    tagline: "Hands each audio-recording script to exactly one contributor at a time with Postgres leases and fencing tokens, recovers abandoned scripts by expiry, and checks each take against its script.",
+    highlights: [
+      "0 scripts handed out twice across 7,267 leases while 300 simulated contributors closed tabs, refreshed, opened second tabs and stalled",
+      "Handing out never-held scripts first cut contributor time lost to rejected late takes from ~93 to ~13 hours per 3 simulated hours",
+      "A local Whisper check rejects 90% of wrong readings and wrongly rejects 0.6% of correct ones; QA as a whole leaves 3% of takes for a person",
+    ],
+    description:
+      "Contributors record scripted audio in the browser, and each script should get exactly one good recording, so while someone is recording a script nobody else may get it. But a browser can vanish at any moment without telling the server, so a held script has to come back on its own. Every claim is a lease with a fresh claim token, taken in one atomic FOR UPDATE SKIP LOCKED statement; the browser heartbeats to extend it, and expired leases count as free inside the claim query itself, so recovery never waits on a background job. The claim token is a fencing token: heartbeat, upload and submit all have to present it, so a stale tab can't touch a script that is now someone else's. After submit, QA workers check the audio and transcribe it with whisper.cpp to confirm the contributor read the right sentence, and an /ops page draws every recent lease as a timeline with heartbeat ticks and how each one ended.",
+    github: "https://github.com/AarnavNoble/script-assignment",
+    demo: null,
+    stack: ["TypeScript", "Next.js", "PostgreSQL", "S3 / MinIO", "whisper.cpp", "Vitest", "Docker"],
+    pipeline: [
+      {
+        step: "Claim",
+        tech: "FOR UPDATE SKIP LOCKED",
+        detail:
+          "One atomic statement picks a free or expired script in the contributor's language and leases it with a new random token. SKIP LOCKED means concurrent claimers each take a different row instead of queueing on one. Never-held scripts go first, which gives a stalled contributor's expired script time to come back.",
+      },
+      {
+        step: "Heartbeat & Expiry",
+        tech: "lease_expires_at + Postgres now()",
+        detail:
+          "The browser heartbeats every 30 s to extend a 10-minute lease. Tab-close events are unreliable, so lease expiry is the real guarantee; every time comparison uses the database clock, never the browser's.",
+      },
+      {
+        step: "Fencing",
+        tech: "claim token",
+        detail:
+          "Heartbeat, upload URL and submit must present the token. A refresh or second tab gets the same script and token back; a contributor back from a long stall gets theirs revived if nobody took it, and is fenced off with a 409 if someone did.",
+      },
+      {
+        step: "Upload & Submit",
+        tech: "presigned PUT + partial unique indexes",
+        detail:
+          "Audio goes straight to object storage, then submit copies it to a key no URL can write and marks the script submitted. Submit is idempotent per token, and the database itself enforces one claimed script per contributor and one live recording per script.",
+      },
+      {
+        step: "Automatic QA",
+        tech: "whisper.cpp + audio checks",
+        detail:
+          "Workers check length against the script's expected reading time, silence, level, clipping, padding, cut-off endings and duplicate audio, then compare a Whisper transcript with the script by character error rate. Clear passes and fails skip the human; borderline takes go to review.",
+      },
+      {
+        step: "Ops & Simulation",
+        tech: "/ops lease timeline + 300-contributor sim",
+        detail:
+          "The ops view recomputes \"handed out twice\" from the audit log every 1.5 s and draws each script's leases with heartbeat ticks. The simulation drives the real HTTP API at 60x time with seven contributor behaviours, from tab vanishes to double submits.",
+      },
+    ],
+    sampleOutput: {
+      label: "Simulation: 300 contributors, 3 simulated hours (seed 42)",
+      steps: [
+        { label: "Handed out twice", value: "0 of 7,267 leases" },
+        { label: "Refresh / second tab", value: "465 of 465 / 292 of 292 got the same script back" },
+        { label: "Double submit", value: "241 of 241 produced exactly one recording" },
+        { label: "Vanished tab", value: "script claimable again 10.0 min after the last heartbeat" },
+        { label: "Capacity", value: "~57 claims/s at p95 under 50 ms on one Node process + one Postgres" },
+      ],
+    },
+  },
+  {
+    slug: "interrupt-lab",
+    name: "Interrupt Lab",
+    short: "A browser voice agent you can cut off mid-sentence.",
+    tagline: "A voice agent you can interrupt in the browser, with the whole conversation run through one pure state-machine reducer and every decision shown as it happens.",
+    highlights: [
+      "Every event from the reply stream, the voice and the mic goes through one pure reducer that returns the next state, the effects to run, and a named transition",
+      "Keeps only the words you actually heard, so the next reply never builds on sentences that were cut off",
+      "A 300 ms noise gate tells a cough from an interrupt without stopping the voice, and each awkward event ordering has a named test",
+    ],
+    description:
+      "Barge-in is one of the hardest parts of a real-time voice agent: the first words of the interruption get dropped, the greeting replays, timestamps come from the wrong moment, or the bot remembers text the user never heard. Here the bot reads a multi-sentence reply aloud one streamed sentence at a time, and you can cut it off by speaking, typing, or pressing Interrupt. Events from three independent sources arrive late, out of order, and sometimes twice, so instead of reacting to each callback where it lands, every event goes through reduce(state, event). The browser code only translates callbacks into events and effects into API calls, the reducer never reads the clock or sets a timer itself, and a phase strip, event log and transcript show each decision live. There is no backend, LLM or API key; scripted scenarios fake the user's side so it runs without a microphone.",
+    github: "https://github.com/AarnavNoble/interrupt-lab",
+    demo: "https://interrupt-lab.netlify.app",
+    stack: ["TypeScript", "Vite", "Vitest", "Web Speech API"],
+    pipeline: [
+      {
+        step: "Events In",
+        tech: "speech recognition + speechSynthesis",
+        detail:
+          "Adapters turn the streaming responder, the voice's word-boundary callbacks and the browser recognizer into plain events stamped with a time. Events sent while another is being handled are queued, so the reducer always sees one at a time.",
+      },
+      {
+        step: "Reducer",
+        tech: "(state, event) → { state, effects, transition }",
+        detail:
+          "Five phases: idle, processing, bot_speaking, overlap and user_speaking. All decisions live in one file with no browser APIs, so every tricky ordering is a unit test written as a list of fake events.",
+      },
+      {
+        step: "Overlap & Noise Gate",
+        tech: "300 ms gate",
+        detail:
+          "Stopping speech isn't reversible, so sound over the bot enters overlap while the voice keeps talking. It becomes an interrupt only after 300 ms with a non-empty transcript; a cough or click drops back to bot_speaking with nothing to recover.",
+      },
+      {
+        step: "Interrupt",
+        tech: "delivered-only history",
+        detail:
+          "The bot turn freezes at the characters the voice actually played, and only that delivered text goes into the next reply's history. The user turn is stamped at speech start, not when recognition finished, and words heard during overlap are buffered rather than dropped.",
+      },
+      {
+        step: "Stale Checks",
+        tech: "turn ids",
+        detail:
+          "Every reply carries a turn id, and only the awaited reply or the active bot turn is accepted. Late chunks, the end event fired by cancelling the voice, and old noise-gate timers are all rejected, so a rapid double interrupt still yields one user turn and one reply.",
+      },
+    ],
+    sampleOutput: {
+      label: "One interrupt, event by event",
+      steps: [
+        { label: "START", value: "opener_requested → processing" },
+        { label: "BOT_CHUNK", value: "reply_started → bot_speaking" },
+        { label: "USER_SPEECH_START", value: "overlap_began → overlap, noise gate started" },
+        { label: "USER_TRANSCRIPT", value: "\"wait\" buffered before the gate" },
+        { label: "NOISE_GATE_ELAPSED", value: "interrupt_confirmed → user_speaking, voice stopped" },
+        { label: "USER_SPEECH_END", value: "user_turn_ended → processing, history holds delivered text only" },
+      ],
+    },
+  },
 ];
 
-// Display order: Vestige is the flagship and leads.
-const PROJECT_ORDER = ["vestige", "llm-engine", "roam", "dothraki-asr", "flame-forecaster"];
+// Display order: Vestige is the flagship and leads, then the newer agent and
+// systems projects ahead of the older ones.
+const PROJECT_ORDER = [
+  "vestige",
+  "oeb-rate-case-agent",
+  "script-assignment",
+  "interrupt-lab",
+  "llm-engine",
+  "roam",
+  "dothraki-asr",
+  "flame-forecaster",
+];
 export const PROJECTS = PROJECT_ORDER.map(
   (slug) => PROJECTS_RAW.find((p) => p.slug === slug)!,
 );
