@@ -1,0 +1,235 @@
+/* Letterboxd film strip: a looping 35mm reel of dithered posters. */
+.dr .reel {
+  --film: #161616;
+  --hole: var(--bg);
+  position: relative;
+  overflow: hidden;
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+
+.dr .films-head {
+  margin-bottom: 18px;
+}
+
+.dr .reel-belt {
+  display: flex;
+  width: max-content;
+  animation: dr-reel var(--reel-duration, 90s) linear infinite;
+}
+
+.dr .reel:hover .reel-belt,
+.dr .reel:focus-within .reel-belt {
+  animation-play-state: paused;
+}
+
+@keyframes dr-reel {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Sprocket holes run along both edges of every run, so they travel with the film. */
+.dr .reel-run {
+  display: flex;
+  flex-shrink: 0;
+  gap: 14px;
+  padding: 30px 7px 34px;
+  background-color: var(--film);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 8px, var(--hole) 8px 20px, transparent 20px 28px),
+    repeating-linear-gradient(90deg, transparent 0 8px, var(--hole) 8px 20px, transparent 20px 28px);
+  background-size: 100% 9px, 100% 9px;
+  background-position: 0 10px, 0 calc(100% - 10px);
+  background-repeat: no-repeat;
+}
+
+.dr .reel-cell {
+  position: relative;
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.dr .reel-frame {
+  display: block;
+  outline-offset: 2px;
+}
+
+.dr .reel-pic {
+  position: relative;
+  display: block;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #0a0a0a;
+  box-shadow: 0 0 0 1px #000;
+}
+
+.dr .reel-pic .dither-photo,
+.dr .reel-pic img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dr .reel-pic img {
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.dr .reel-frame:hover img,
+.dr .reel-frame:focus-visible img {
+  opacity: 1;
+}
+
+/* Edge print between the frames and the bottom sprockets. */
+.dr .reel-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -24px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-gmono), ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #6b6b6b;
+}
+
+/* Ticket stub that tears up from the bottom of the frame. */
+.dr .stub {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  display: grid;
+  gap: 2px;
+  padding: 10px 10px 9px;
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--font-gmono), ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 1.35;
+  text-transform: uppercase;
+  transform: translateY(calc(100% + 12px));
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  -webkit-mask:
+    radial-gradient(circle 4px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 4px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 4px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 4px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+}
+
+.dr .stub::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 4px;
+  border-top: 1px dashed rgba(13, 13, 13, 0.45);
+}
+
+.dr .reel-frame:hover .stub,
+.dr .reel-frame:focus-visible .stub {
+  transform: none;
+}
+
+.dr .stub-admit {
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+.dr .stub-title {
+  font-family: var(--font-mona), system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.dr .stub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.dr .stub-stars {
+  letter-spacing: 0.05em;
+}
+
+.dr .stub-date {
+  opacity: 0.6;
+  font-size: 9px;
+}
+
+/* Rating distribution */
+.dr .films-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 32px;
+}
+
+.dr .hist ol {
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  height: 56px;
+}
+
+.dr .hist li {
+  position: relative;
+  display: flex;
+  align-items: end;
+  width: 10px;
+  height: 100%;
+}
+
+.dr .hist-bar {
+  display: block;
+  width: 100%;
+  min-height: 1px;
+  background-image: conic-gradient(var(--text) 25%, transparent 0 50%, var(--text) 0 75%, transparent 0);
+  background-size: 2px 2px;
+  image-rendering: pixelated;
+}
+
+.dr .hist-label {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-gmono), ui-monospace, monospace;
+  font-size: 9px;
+  color: var(--faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dr .reel {
+    overflow-x: auto;
+  }
+  .dr .reel-belt {
+    animation: none;
+  }
+  .dr .reel-run[aria-hidden] {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .dr .reel-cell {
+    width: 116px;
+  }
+  .dr .films-head {
+    flex-direction: column;
+    align-items: start;
+    gap: 16px;
+  }
+}

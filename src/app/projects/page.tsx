@@ -7,11 +7,17 @@ import { RoamDemo } from "./RoamDemo";
 import { DothrakiDemo } from "./DothrakiDemo";
 import { VestigeDemo } from "./VestigeDemo";
 import { EngineDemo } from "./EngineDemo";
+import { OebDemo } from "./OebDemo";
+import { LeaseDemo } from "./LeaseDemo";
+import { InterruptDemo } from "./InterruptDemo";
 
 export const metadata: Metadata = { title: "Projects | Aarnav Noble" };
 
 const DEMOS: Record<string, () => React.JSX.Element> = {
   vestige: VestigeDemo,
+  "oeb-rate-case-agent": OebDemo,
+  "script-assignment": LeaseDemo,
+  "interrupt-lab": InterruptDemo,
   "llm-engine": EngineDemo,
   roam: RoamDemo,
   "dothraki-asr": DothrakiDemo,

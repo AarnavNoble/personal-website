@@ -4,6 +4,8 @@ import { ALBUMS, CAMERA } from "@/lib/photos";
 import { AsciiField } from "@/components/dither/AsciiField";
 import { ColorDither } from "@/components/dither/ColorDither";
 import { CopyEmail } from "@/components/dither/CopyEmail";
+import { FilmStrip, RatingHistogram } from "@/components/dither/FilmStrip";
+import { FILMS, FILM_STATS, LETTERBOXD } from "@/lib/films";
 import { HeroDesk } from "@/components/dither/HeroDesk";
 import { ProjectCover } from "@/components/dither/ProjectCover";
 import { Window } from "@/components/dither/Window";
@@ -161,6 +163,19 @@ export default function Home() {
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* Films */}
+      <section className="block">
+        <div className="wrap block-head films-head">
+          <div>
+            <h2>Films</h2>
+            <p className="block-sub">Some of my favourite movies, rated on Letterboxd.</p>
+          </div>
+          {FILM_STATS && <RatingHistogram stats={FILM_STATS} />}
+          <a href={LETTERBOXD} target="_blank" rel="noopener">Letterboxd</a>
+        </div>
+        <FilmStrip films={FILMS} profile={LETTERBOXD} />
       </section>
 
       {/* Contact */}

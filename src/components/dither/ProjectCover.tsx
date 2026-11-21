@@ -41,6 +41,69 @@ const SCENES: Record<string, Scene> = {
       start += w * (0.02 + r() * 0.05);
     }
   },
+  // A fanned stack of filing pages, one line on the top page highlighted as the cited passage.
+  "oeb-rate-case-agent"(ctx, w, h) {
+    glow(ctx, w * 0.7, h * 0.25, w * 0.8, "rgba(40,90,200,0.55)");
+    const pw = w * 0.34;
+    const ph = h * 0.82;
+    for (let i = 0; i < 5; i++) {
+      const x = w * 0.2 + i * w * 0.055;
+      const y = h * 0.14 - i * h * 0.015;
+      ctx.fillStyle = `hsl(215 25% ${22 + i * 13}%)`;
+      ctx.fillRect(x, y, pw, ph);
+    }
+    const x0 = w * 0.2 + 4 * w * 0.055;
+    const y0 = h * 0.14 - 4 * h * 0.015;
+    const r = rand(5);
+    const lines = 11;
+    for (let i = 0; i < lines; i++) {
+      const y = y0 + ph * (0.1 + (i / lines) * 0.8);
+      const cited = i === 6 || i === 7;
+      if (cited) {
+        ctx.fillStyle = "hsl(40 95% 58%)";
+        ctx.fillRect(x0 + pw * 0.06, y - ph * 0.025, pw * 0.88, ph * 0.06);
+      }
+      ctx.fillStyle = cited ? "hsl(30 60% 18%)" : "hsl(215 20% 30%)";
+      ctx.fillRect(x0 + pw * 0.1, y, pw * (0.5 + r() * 0.3), Math.max(1, ph * 0.018));
+    }
+  },
+  // A lease timeline: one row per script, each holder's lease as a bar with heartbeat ticks.
+  "script-assignment"(ctx, w, h) {
+    glow(ctx, w * 0.3, h * 0.8, w * 0.8, "rgba(20,160,110,0.5)");
+    const r = rand(13);
+    const rows = 7;
+    const rowH = h / (rows + 1);
+    for (let i = 0; i < rows; i++) {
+      const y = rowH * (i + 0.6);
+      let x = w * (0.04 + r() * 0.12);
+      for (let seg = 0; seg < 3 && x < w * 0.92; seg++) {
+        const len = w * (0.14 + r() * 0.28);
+        const end = Math.min(x + len, w * 0.96);
+        const expired = r() < 0.3;
+        ctx.fillStyle = expired ? "hsl(30 80% 45%)" : `hsl(${150 + seg * 15} 70% ${42 + seg * 8}%)`;
+        ctx.fillRect(x, y, end - x, rowH * 0.55);
+        ctx.fillStyle = "rgba(240,255,245,0.9)";
+        for (let t = x + w * 0.03; t < end - 2; t += w * 0.035) ctx.fillRect(t, y, 1, rowH * 0.55);
+        x = end + w * (0.02 + r() * 0.06);
+      }
+    }
+  },
+  // A voice waveform cut off mid-sentence, the rest left as a faint outline.
+  "interrupt-lab"(ctx, w, h) {
+    glow(ctx, w * 0.35, h * 0.5, w * 0.7, "rgba(210,50,140,0.55)");
+    const r = rand(17);
+    const bars = 52;
+    const bw = w / bars;
+    const cut = Math.floor(bars * 0.58);
+    for (let i = 0; i < bars; i++) {
+      const env = 0.35 + 0.65 * Math.abs(Math.sin(i * 0.45));
+      const amp = env * (0.25 + r() * 0.75) * h * 0.36;
+      ctx.fillStyle = i < cut ? `hsl(${320 + (i / bars) * 30} 85% ${48 + env * 18}%)` : "hsl(320 20% 22%)";
+      ctx.fillRect(i * bw + 1, h / 2 - amp, bw - 2, amp * 2);
+    }
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(cut * bw - 1, h * 0.08, Math.max(2, w / 160), h * 0.84);
+  },
   // Paged KV cache: a grid of blocks, warmer where more sequences share them.
   "llm-engine"(ctx, w, h) {
     glow(ctx, w * 0.8, h * 0.2, w, "rgba(120,40,200,0.55)");
